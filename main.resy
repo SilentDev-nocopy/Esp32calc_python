@@ -1,8 +1,6 @@
 v x int = 10
 v y float = 2
 
-print_cmd(x.type(float))
-print_cmd(y.type(bool))
-
-print_cmd(x)
-print_cmd(y)
+mat x:
+	1:
+		print_cmd("asd")
