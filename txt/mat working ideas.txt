@@ -1,0 +1,120 @@
+1. What is the "mat" statement?
+        A statement which compares a given value against multiple possible cases.
+
+2. What is the basic syntax of "mat"?
+        The synstax looks like this:
+        "mat variant_name: <- or if you need the type then on the end, put the .type() function.
+            "1": <-string 
+                print_cmd("1")
+            int: <- type   (only usable if type asked!)
+                print_cmd(variant_name, "Is int")
+            1:  <- int, float
+                print_cmd("1")
+            true:
+                print_cmd("is true") <- booliant (only usable if type asked!)
+3. Can "mat" have an else branch?
+        Yes. On the last brach it can have an "else" branch.
+
+4. What happens when a case matches?
+        The matching branch runs and then the "mat" ends. There is no fall-through.
+
+5. What happens when no case matches and there is no else?
+        The runtime continues after the "mat".
+
+6. What can be used as the value that "mat" checks?
+        int, vloat, string, bool and any other type.
+
+7. What can be used as a case value?
+        Cases use concrete values.
+        
+
+8. Can a case contain an expression?
+        No it can not.
+
+9. Can the same case value appear more than once?
+        No, if it happen it gives error:"{the duplicate case} is already a used case value!" Error code:"SameCaseMultiCall"
+
+10. What happens when duplicate case values are used?
+        already answered.
+
+11. Which types can be used with "mat"?
+        already answered.
+
+12. Can "mat" be used with int?
+        By calling the variant_name.tyoe() command, yes. Otherwise no.
+
+13. Can "mat" be used with float?
+         already answered.
+
+14. Can "mat" be used with string?
+         already answered.
+
+15. Can "mat" be used with bool?
+         already answered.
+
+16. Can "mat" be used with Vector2?
+         already answered.
+
+17. Can different types be used as cases in the same "mat"?
+        No, just one.
+
+18. What happens if a case has a different type from the value checked by "mat"?
+        it skips it. If in case brantc cant find any, then it goes to the else branc(if writen) then exits the mat function.
+
+19. Does the order of cases matter?
+        No.
+
+20. Can "mat" contain multiple cases?
+        Yes.
+
+21. Can cases contain multiple lines of code?
+        If you mean a case can call more then one line of code, then yes it can. It calls every line of code in that case.
+
+22. Can a case contain another "mat"?
+        no. if happen it gives erro:"{case} Cannot call match inside a match function. Error code:"NestedMatchError
+
+23. Can "mat" be used inside functions?
+        UNDEFINED
+
+24. Can "mat" be used inside if/elif/else blocks?
+        UNDEFINED
+
+25. Can "return" be used inside a "mat" case?
+        UNDEFINED
+
+26. Can "pass" be used inside a "mat" case?
+        UNDEFINED
+
+27. What happens if the "mat" value changes while the "mat" is running?
+        UNDEFINED
+
+28. Is the "mat" value evaluated once or multiple times?
+        UNDEFINED
+
+29. What happens if the "mat" value does not exist?
+        UNDEFINED
+
+30. What happens if a case value is invalid?
+        UNDEFINED
+
+31. What is the exact syntax for the "else" branch?
+        UNDEFINED
+
+32. Can there be more than one "else" branch?
+        UNDEFINED
+
+33. Can a "mat" have no cases and only an else branch?
+        UNDEFINED
+
+34. Example of the currently intended structure:
+
+        mat value:
+            1:
+                print_cmd("one")
+            2:
+                print_cmd("two")
+            else:
+                print_cmd("other")
+
+35. Is the exact "mat" syntax already fully defined in the Resiris specification?
+        No. The tokenizer knows the "mat" keyword, but the case/branch syntax still needs to be defined before implementation.
