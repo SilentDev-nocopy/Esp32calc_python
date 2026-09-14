@@ -20,14 +20,14 @@ def test_type_int_to_float_without_modifying_original():
 
 
 def test_type_number_to_bool():
-    variables = run("""\nv a int = 0\nv b int = -3\nv c int = 4\nv aa bool = a.type(bool)\nv bb bool = b.type(bool)\nv cc bool = c.type(bool)\n""")
+    variables = run("""\nv a int = 0\nv b int = -3\nv cval int = 4\nv aa bool = a.type(bool)\nv bb bool = b.type(bool)\nv cc bool = cval.type(bool)\n""")
     assert variables["aa"].value is False
     assert variables["bb"].value is False
     assert variables["cc"].value is True
 
 
 def test_type_float_to_int_rounds_half_up():
-    variables = run("""\nv a float = 0.4\nv b float = 0.5\nv c float = 1.4\nv d float = 1.5\nv aa int = a.type(int)\nv bb int = b.type(int)\nv cc int = c.type(int)\nv dd int = d.type(int)\n""")
+    variables = run("""\nv a float = 0.4\nv b float = 0.5\nv cval float = 1.4\nv d float = 1.5\nv aa int = a.type(int)\nv bb int = b.type(int)\nv cc int = cval.type(int)\nv dd int = d.type(int)\n""")
     assert variables["aa"].value == 0
     assert variables["bb"].value == 1
     assert variables["cc"].value == 1

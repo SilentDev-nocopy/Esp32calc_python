@@ -75,6 +75,7 @@ class TokenType(Enum):
 KEYWORDS = {
     "include": TokenType.INCLUDE,
     "v": TokenType.V,
+    "c": TokenType.C,
     "fn": TokenType.FN,
     "start": TokenType.START,
     "process": TokenType.PROCESS,

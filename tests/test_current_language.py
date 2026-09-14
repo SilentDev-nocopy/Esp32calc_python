@@ -60,7 +60,6 @@ def run_value(source, name):
 # TOKENIZER
 # ---------------------------------------------------------------------------
 
-@pytest.mark.xfail(reason="CURRENT implementation does not tokenize `c` as a keyword yet")
 def test_tokenizer_recognizes_core_keywords_and_types():
     tokens = Tokenizer().tokenize(
         "v x int = 10\n"
@@ -88,7 +87,7 @@ def test_tokenizer_recognizes_assignment_and_comparison_operators():
         "x /= 2\n"
         "v a bool = x == 1\n"
         "v b bool = x != 1\n"
-        "v c bool = x > 1\n"
+        "v gt bool = x > 1\n"
         "v d bool = x < 1\n"
         "v e bool = x >= 1\n"
         "v f bool = x <= 1\n"
@@ -357,14 +356,14 @@ def test_arithmetic_operators():
     variables = run(
         "v a int = 10 + 2\n"
         "v b int = 10 - 2\n"
-        "v c int = 10 * 2\n"
+        "v product int = 10 * 2\n"
         "v d float = 10 / 2\n"
         "v e int = 10 % 3\n"
     )
 
     assert variables["a"].value == 12
     assert variables["b"].value == 8
-    assert variables["c"].value == 20
+    assert variables["product"].value == 20
     assert variables["d"].value == 5.0
     assert variables["e"].value == 1
 
@@ -390,7 +389,7 @@ def test_comparison_operators_produce_bool():
     variables = run(
         "v a bool = 2 == 2\n"
         "v b bool = 2 != 3\n"
-        "v c bool = 3 > 2\n"
+        "v gt bool = 3 > 2\n"
         "v d bool = 2 < 3\n"
         "v e bool = 3 >= 3\n"
         "v f bool = 2 <= 3\n"
@@ -398,7 +397,7 @@ def test_comparison_operators_produce_bool():
 
     assert variables["a"].value is True
     assert variables["b"].value is True
-    assert variables["c"].value is True
+    assert variables["gt"].value is True
     assert variables["d"].value is True
     assert variables["e"].value is True
     assert variables["f"].value is True
@@ -687,11 +686,11 @@ def test_type_float_to_int_uses_half_up_rounding():
     variables = run(
         "v a float = 0.4\n"
         "v b float = 0.5\n"
-        "v c float = 1.4\n"
+        "v cval float = 1.4\n"
         "v d float = 1.5\n"
         "v aa int = a.type(int)\n"
         "v bb int = b.type(int)\n"
-        "v cc int = c.type(int)\n"
+        "v cc int = cval.type(int)\n"
         "v dd int = d.type(int)\n"
     )
     assert variables["aa"].value == 0
@@ -1081,11 +1080,11 @@ def test_nested_if_inside_function():
         "\t\treturn 0\n"
         "v a int = test(20)\n"
         "v b int = test(5)\n"
-        "v c int = test(-1)\n"
+        "v result_c int = test(-1)\n"
     )
     assert variables["a"].value == 2
     assert variables["b"].value == 1
-    assert variables["c"].value == 0
+    assert variables["result_c"].value == 0
 
 
 def test_multiple_program_runs_do_not_share_default_interpreters():

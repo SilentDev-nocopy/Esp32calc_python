@@ -105,18 +105,6 @@ class Parser:
             return self.parse_declaration()
         if token.type is TokenType.C:
             return self.parse_declaration()
-        # `c` is a valid identifier for a varint.
-        # Constant declaration is recognized by its declaration shape:
-        # c <identifier> <type> [= expression]
-        if (
-            token.type is TokenType.IDENTIFIER
-            and token.value == "c"
-            and self.pos + 2 < len(self.tokens)
-            and self.tokens[self.pos + 1].type is TokenType.IDENTIFIER
-            and self.tokens[self.pos + 2].type in self.TYPE_TOKENS
-        ):
-            self.advance()  # contextual `c` declaration keyword
-            return self.parse_declaration_after_kind("c")
         if token.type is TokenType.FN:
             return self.parse_function()
         if token.type in (TokenType.START, TokenType.PROCESS):
