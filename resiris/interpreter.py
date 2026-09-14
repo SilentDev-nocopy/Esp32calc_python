@@ -30,6 +30,11 @@ class RuntimeErrorResiris(Exception):
     """Resiris runtime error."""
 
 
+class IntDivisionError(RuntimeErrorResiris):
+    """Raised when an int value is used as the left side of division."""
+    pass
+
+
 class UnknownVariableError(RuntimeErrorResiris):
     pass
 
@@ -597,6 +602,11 @@ class Interpreter:
             if operator == "/":
                 if right == 0:
                     raise RuntimeErrorResiris("division by zero")
+
+                if isinstance(left, int) and not isinstance(left, bool):
+                    raise IntDivisionError(
+                        'Cant division with int type! Must use float! Error code:"IntDivisionError"'
+                    )
 
                 return left / right
 
