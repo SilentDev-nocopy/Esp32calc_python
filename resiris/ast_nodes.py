@@ -108,3 +108,17 @@ class CallExpr:
 class TypeConversionExpr:
     value: object
     target_type: str
+
+
+@dataclass
+class MatCase:
+    value: object
+    body: list[object]
+    type_case: bool = False
+
+
+@dataclass
+class MatStmt:
+    value: object
+    cases: list[MatCase]
+    else_body: Optional[list[object]] = None

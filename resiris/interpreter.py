@@ -20,6 +20,7 @@ from .ast_nodes import (
     FunctionalObjectDef,
     UnaryExpr,
     Include,
+    MatStmt,
 )
 from .tokenizer import ResirisSyntaxError
 from .module_loader import ModuleLoader, RuntimeErrorResirisModule
@@ -154,6 +155,10 @@ class Interpreter:
 
             if isinstance(statement, IfStmt):
                 self.execute_if(statement)
+                return
+
+            if isinstance(statement, MatStmt):
+                self.execute_mat(statement)
                 return
 
             if isinstance(statement, FunctionDef):
@@ -313,6 +318,35 @@ class Interpreter:
 
             if condition:
                 self.execute_block(elif_body)
+                return
+
+        if statement.else_body is not None:
+            self.execute_block(statement.else_body)
+
+    def execute_mat(self, statement: MatStmt):
+        # The checked value is evaluated exactly once.
+        value = self.evaluate(statement.value)
+        value_type = self.infer_type_name(value)
+
+        for case in statement.cases:
+            if case.type_case:
+                # `.type()` returns the requested type name as a string.
+                if value != case.value:
+                    continue
+                self.execute_block(case.body)
+                return
+
+            case_value = case.value
+            if self.infer_type_name(case_value) != value_type:
+                continue
+
+            if value == case_value:
+                try:
+                    self.execute_block(case.body)
+                except RuntimeErrorResiris as error:
+                    raise RuntimeErrorResiris(
+                        f'{error} Error code:"MatchCaseExecutionError"'
+                    ) from error
                 return
 
         if statement.else_body is not None:

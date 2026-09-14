@@ -8,6 +8,7 @@ from .ast_nodes import (
     Program, Include, Declaration, FunctionDef, IfStmt, ReturnStmt, PassStmt,
     AwaitStmt, PrintCmdStmt, Assignment, ExpressionStmt, Literal, Name, UnaryExpr,
     BinaryExpr, CallExpr, FunctionalObjectDef, TypeConversionExpr,
+    MatStmt, MatCase,
 )
 
 
@@ -39,6 +40,7 @@ class Parser:
     def __init__(self, tokens: list[Token]):
         self.tokens = tokens
         self.pos = 0
+        self.mat_case_depth = 0
 
     def current(self) -> Token:
         return self.tokens[self.pos]
@@ -122,11 +124,12 @@ class Parser:
         if token.type is TokenType.IF:
             return self.parse_if()
         if token.type is TokenType.MAT:
-            self.error(
-                token,
-                "`mat` is tokenized, but its case/branch syntax is not currently "
-                "clearly defined in the specification"
-            )
+            if self.mat_case_depth > 0:
+                self.error(
+                    token,
+                    'Cannot call match inside a match function. Error code:"NestedMatchError"'
+                )
+            return self.parse_mat()
         if token.type is TokenType.RETURN:
             return self.parse_return()
         if token.type is TokenType.PASS:
@@ -257,6 +260,120 @@ class Parser:
 
         self.expect(TokenType.DEDENT, "missing block terminator")
         return statements
+
+    def parse_mat(self) -> MatStmt:
+        self.advance()  # mat
+
+        value = self.parse_expression()
+        if isinstance(value, Literal):
+            self.error(
+                self.previous(),
+                "a literal cannot be used directly as the value checked by `mat`"
+            )
+        self.expect(TokenType.COLON, "`mat` must end with `:`")
+        self.expect(TokenType.NEWLINE, "a line ending is required after `mat`")
+
+        self.expect(TokenType.INDENT, "an indented line is required for the mat body")
+        self.skip_newlines()
+
+        cases: list[MatCase] = []
+        else_body = None
+        case_keys = set()
+        case_type = None
+        type_match_mode = isinstance(value, TypeConversionExpr) and value.target_type is None
+
+        while not self.at(TokenType.DEDENT) and not self.at(TokenType.EOF):
+            # A nested `mat` directly inside a case is forbidden by the
+            # Resiris mat specification. Nested mat inside other valid blocks
+            # is handled normally by their respective parser.
+            if self.at(TokenType.ELSE):
+                if else_body is not None:
+                    self.error(self.current(), "multiple `else` branches are not allowed in `mat`")
+                self.advance()
+                self.expect(TokenType.COLON, "`else` must end with `:`")
+                self.expect(TokenType.NEWLINE, "a line ending is required after `else`")
+                else_body = self.parse_mat_case_body()
+                self.skip_newlines()
+                if not self.at(TokenType.DEDENT):
+                    self.error(self.current(), "`else` must be the last branch of `mat`")
+                continue
+
+            type_case = self.current().type in self.TYPE_TOKENS and self.current().type != TokenType.TYPE_UNKNOWN
+            if type_case:
+                if not type_match_mode:
+                    self.error(
+                        self.current(),
+                        "a type case can only be used when `mat` checks `.type()`"
+                    )
+                token = self.advance()
+                case_value = self.TYPE_TOKENS[token.type]
+                key = ("type", case_value)
+                current_case_type = ("type",)
+            else:
+                case_expr = self.parse_mat_case_value()
+                case_value = case_expr.value
+                key = ("value", self._mat_case_key(case_value))
+                current_case_type = ("value", type(case_value).__name__)
+
+            if case_type is None:
+                case_type = current_case_type
+            elif case_type != current_case_type:
+                self.error(
+                    self.current(),
+                    "different case types cannot be mixed in the same `mat`"
+                )
+
+            if key in case_keys:
+                self.error(self.previous(), f'{case_value} is already a used case value! Error code:"SameCaseMultiCall"')
+            case_keys.add(key)
+
+            self.expect(TokenType.COLON, "a mat case must end with `:`")
+            self.expect(TokenType.NEWLINE, "a line ending is required after a mat case")
+            body = self.parse_mat_case_body()
+
+            cases.append(MatCase(case_value, body, type_case=type_case))
+            self.skip_newlines()
+
+        if not cases and else_body is not None:
+            self.error(self.current(), 'mat statement has no cases')
+        if not cases:
+            self.error(self.current(), 'mat statement has an empty body. Error code:"EmptyMatchBody"')
+
+        self.expect(TokenType.DEDENT, "missing mat block terminator")
+        return MatStmt(value, cases, else_body)
+
+    def parse_mat_case_value(self):
+        token = self.current()
+        if token.type is TokenType.INTEGER:
+            self.advance()
+            return Literal(token.value)
+        if token.type is TokenType.FLOAT:
+            self.advance()
+            return Literal(token.value)
+        if token.type is TokenType.STRING:
+            self.advance()
+            return Literal(token.value)
+        if token.type is TokenType.TRUE:
+            self.advance()
+            return Literal(True)
+        if token.type is TokenType.FALSE:
+            self.advance()
+            return Literal(False)
+        self.error(token, f'{token.value!r} is an invalid case value. Error code:"InvalidCaseValue"')
+
+    def parse_mat_case_body(self):
+        if not self.at(TokenType.INDENT):
+            self.error(self.current(), 'case has no body. Error code:"MissingCaseBody"')
+        self.mat_case_depth += 1
+        try:
+            return self.parse_block()
+        finally:
+            self.mat_case_depth -= 1
+
+    def _mat_case_key(self, value):
+        # bool is a subclass of int in Python; include the exact runtime type
+        # so true and 1 remain distinct case values.
+        return (type(value).__name__, value)
 
     def parse_if(self) -> IfStmt:
         self.advance()  # if
@@ -389,17 +506,26 @@ class Parser:
                 continue
 
             if self.match(TokenType.DOT):
-                method = self.expect(
-                    TokenType.IDENTIFIER,
-                    "a method name is required after `.`"
-                )
-                if method.value != "type":
-                    self.error(method, "only `type()` is currently supported here")
+                if self.current().type in (TokenType.IDENTIFIER, TokenType.TYPE_STRING):
+                    method = self.advance()
+                else:
+                    self.error(
+                        self.current(),
+                        "a method name is required after `.`"
+                    )
+                if method.value not in {"type", "string"}:
+                    self.error(method, "only `.type()` and `.string()` are supported here")
 
                 self.expect(
                     TokenType.LPAREN,
-                    "`(` is required after `.type`"
+                    f"`(` is required after `.{method.value}`"
                 )
+
+                if method.value == "string":
+                    if not self.match(TokenType.RPAREN):
+                        self.error(self.current(), "string() receives no arguments")
+                    expr = TypeConversionExpr(expr, "string")
+                    continue
 
                 target_types = {
                     TokenType.TYPE_INT: "int",
