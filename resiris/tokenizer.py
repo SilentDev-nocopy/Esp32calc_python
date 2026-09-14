@@ -70,6 +70,8 @@ class TokenType(Enum):
     LPAREN = auto()
     RPAREN = auto()
     DOT = auto()
+    LBRACKET = auto()
+    RBRACKET = auto()
 
 
 KEYWORDS = {
@@ -162,6 +164,8 @@ class Tokenizer:
         "(": TokenType.LPAREN,
         ")": TokenType.RPAREN,
         ".": TokenType.DOT,
+        "[": TokenType.LBRACKET,
+        "]": TokenType.RBRACKET,
     }
 
     def tokenize(self, source: str) -> list[Token]:

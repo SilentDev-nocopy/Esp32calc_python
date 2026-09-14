@@ -34,11 +34,13 @@ def test_rounding_functions():
 
 def test_logarithms():
     assert math.isclose(run_expr("RSMath.ln(RSMath.E)"), 1.0)
+    assert math.isclose(run_expr("RSMath.ln(RSMath[E])"), 1.0)
     assert math.isclose(run_expr("RSMath.log10(1000)"), 3.0)
 
 
 def test_trigonometry_uses_radians():
     assert math.isclose(run_expr("RSMath.sin(RSMath.PI / 2.0)"), 1.0, abs_tol=1e-12)
+    assert math.isclose(run_expr("RSMath.sin(RSMath[PI] / 2.0)"), 1.0, abs_tol=1e-12)
     assert math.isclose(run_expr("RSMath.cos(0.0)"), 1.0)
     assert math.isclose(run_expr("RSMath.tan(0.0)"), 0.0)
     assert math.isclose(run_expr("RSMath.asin(1.0)"), RSMath_PI_HALF, abs_tol=1e-12)

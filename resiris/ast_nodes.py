@@ -111,6 +111,12 @@ class ModuleAccessExpr:
 
 
 @dataclass
+class ModuleConstantAccessExpr:
+    module_name: str
+    constant_name: str
+
+
+@dataclass
 class TypeConversionExpr:
     value: object
     target_type: str

@@ -121,7 +121,12 @@ class ModuleLoader:
 
     def get_constant(self, module_name: str, constant_name: str):
         module = self.get(module_name)
-        variable_types = self._variable_descriptions(self.info[module_name].variables)
+        info = self.info[module_name]
+
+        if constant_name in {"NAME", "FUNCTIONS", "VARIABLES"}:
+            return getattr(info, constant_name.lower())
+
+        variable_types = self._variable_descriptions(info.variables)
 
         if constant_name not in variable_types:
             raise RuntimeErrorResirisModule(

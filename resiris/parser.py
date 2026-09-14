@@ -8,7 +8,7 @@ from .ast_nodes import (
     Program, Include, Declaration, FunctionDef, IfStmt, ReturnStmt, PassStmt,
     AwaitStmt, PrintCmdStmt, Assignment, ExpressionStmt, Literal, Name, UnaryExpr,
     BinaryExpr, CallExpr, FunctionalObjectDef, TypeConversionExpr,
-    MatStmt, MatCase, ModuleAccessExpr,
+    MatStmt, MatCase, ModuleAccessExpr, ModuleConstantAccessExpr,
 )
 
 
@@ -491,6 +491,27 @@ class Parser:
                             break
                 self.expect(TokenType.RPAREN, "missing `)` in the call")
                 expr = CallExpr(expr, arguments)
+                continue
+
+            if self.match(TokenType.LBRACKET):
+                if not isinstance(expr, Name):
+                    self.error(
+                        self.current(),
+                        "module constant access requires a module name before `[`"
+                    )
+
+                if self.current().type is not TokenType.IDENTIFIER:
+                    self.error(
+                        self.current(),
+                        "a constant name is required inside `[]`"
+                    )
+
+                constant = self.advance()
+                self.expect(
+                    TokenType.RBRACKET,
+                    "missing `]` in module constant access"
+                )
+                expr = ModuleConstantAccessExpr(expr.name, constant.value)
                 continue
 
             if self.match(TokenType.DOT):

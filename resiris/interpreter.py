@@ -22,6 +22,7 @@ from .ast_nodes import (
     Include,
     MatStmt,
     ModuleAccessExpr,
+    ModuleConstantAccessExpr,
 )
 from .tokenizer import ResirisSyntaxError
 from .module_loader import ModuleLoader, RuntimeErrorResirisModule
@@ -545,6 +546,15 @@ class Interpreter:
                 return self.module_loader.get_constant(
                     expression.module_name,
                     expression.member_name,
+                )
+            except RuntimeErrorResirisModule as error:
+                raise RuntimeErrorResiris(str(error)) from error
+
+        if isinstance(expression, ModuleConstantAccessExpr):
+            try:
+                return self.module_loader.get_constant(
+                    expression.module_name,
+                    expression.constant_name,
                 )
             except RuntimeErrorResirisModule as error:
                 raise RuntimeErrorResiris(str(error)) from error

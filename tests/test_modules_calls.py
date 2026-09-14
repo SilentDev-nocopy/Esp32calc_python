@@ -180,6 +180,25 @@ def _INIT_():
     assert variables["result"].value == 3.14
 
 
+def test_module_exported_constant_can_be_read_with_brackets(tmp_path):
+    interpreter = make_interpreter(
+        tmp_path,
+        """NAME = "TestMod"
+FUNCTIONS = ""
+VARIABLES = "PI:float"
+
+PI = 3.14
+
+def _INIT_():
+    pass
+""",
+    )
+    variables = interpreter.run(
+        parse("<include> TestMod\nv result float = TestMod[PI]\n")
+    )
+    assert variables["result"].value == 3.14
+
+
 def test_non_exported_module_member_is_rejected(tmp_path):
     interpreter = make_interpreter(
         tmp_path,
@@ -195,6 +214,57 @@ def _INIT_():
     )
     with pytest.raises(RuntimeErrorResiris, match="unknown module constant"):
         interpreter.run(parse("<include> TestMod\nv result int = TestMod.SECRET\n"))
+
+
+def test_module_metadata_constants_can_be_read_with_brackets(tmp_path):
+    interpreter = make_interpreter(
+        tmp_path,
+        """NAME = "TestMod"
+FUNCTIONS = "double"
+VARIABLES = "PI:float"
+
+PI = 3.14
+
+def _INIT_():
+    pass
+
+def double(value):
+    return value * 2
+""",
+    )
+    variables = interpreter.run(
+        parse(
+            "<include> TestMod\n"
+            "v name string = TestMod[NAME]\n"
+            "v functions string = TestMod[FUNCTIONS]\n"
+            "v variables string = TestMod[VARIABLES]\n"
+        )
+    )
+    assert variables["name"].value == "TestMod"
+    assert variables["functions"].value == "double"
+    assert variables["variables"].value == "PI:float"
+
+
+def test_module_constant_can_be_type_converted_with_type(tmp_path):
+    interpreter = make_interpreter(
+        tmp_path,
+        """NAME = "TestMod"
+FUNCTIONS = ""
+VARIABLES = "VALUE:int"
+
+VALUE = 10
+
+def _INIT_():
+    pass
+""",
+    )
+    variables = interpreter.run(
+        parse(
+            "<include> TestMod\n"
+            "v result float = TestMod[VALUE].type(float)\n"
+        )
+    )
+    assert variables["result"].value == 10.0
 
 
 def test_module_function_wrong_argument_count_is_resiris_error(tmp_path):
