@@ -1,6 +1,0 @@
-v x int = 10
-v y float = 2
-
-mat x:
-	1:
-		print_cmd("asd")
