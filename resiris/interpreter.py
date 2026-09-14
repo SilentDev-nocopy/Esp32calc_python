@@ -111,10 +111,22 @@ class Interpreter:
         self.modules: dict[str, object] = self.module_loader.loaded
 
     def run(self, program: Program) -> dict[str, Variable]:
-        # Register top-level function definitions first,
-        # so a function can be called even when defined later in the program.
+        # Top-level function definitions are registered first, so a function
+        # can be called even when defined later in the program.
+        # Before doing that, reserve top-level declaration names as well, so
+        # a variable/constant cannot silently share a name with a function.
+        top_level_declaration_names = {
+            statement.name
+            for statement in program.statements
+            if isinstance(statement, Declaration)
+        }
+
         for statement in program.statements:
             if isinstance(statement, FunctionDef):
+                if statement.name in top_level_declaration_names:
+                    raise FunctionError(
+                        f"{statement.name}: the name is already used as a variable"
+                    )
                 self.register_function(statement)
 
         for statement in program.statements:

@@ -605,7 +605,6 @@ def test_function_can_be_called_before_its_definition():
     assert variables["result"].value == 5
 
 
-@pytest.mark.xfail(reason="CURRENT implementation registers top-level functions before variables are executed")
 def test_function_cannot_have_same_name_as_variable():
     with pytest.raises(FunctionError):
         run(
