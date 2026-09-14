@@ -323,7 +323,7 @@ class Parser:
             self.skip_newlines()
 
         if not cases and else_body is not None:
-            self.error(self.current(), 'mat statement has no cases')
+            self.error(self.current(), 'mat statement has an empty body. Error code:"EmptyMatchBody"')
         if not cases:
             self.error(self.current(), 'mat statement has an empty body. Error code:"EmptyMatchBody"')
 

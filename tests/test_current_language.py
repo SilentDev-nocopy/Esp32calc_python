@@ -1017,7 +1017,7 @@ def test_mat_else_must_be_last():
         )
 
 
-@pytest.mark.xfail(reason="CURRENT parser raises generic 'mat statement has no cases' instead of EmptyMatchBody for else-only mat")
+
 def test_mat_requires_at_least_one_case():
     with pytest.raises(ResirisSyntaxError, match="EmptyMatchBody"):
         parse(
