@@ -29,6 +29,7 @@ from resiris.ast_nodes import (
 from resiris.interpreter import (
     ConstantAssignmentError,
     FunctionError,
+    IntDivisionError,
     Interpreter,
     RuntimeErrorResiris,
     TypeErrorResiris,
@@ -357,7 +358,7 @@ def test_arithmetic_operators():
         "v a int = 10 + 2\n"
         "v b int = 10 - 2\n"
         "v product int = 10 * 2\n"
-        "v d float = 10 / 2\n"
+        "v d float = 10.0 / 2\n"
         "v e int = 10 % 3\n"
     )
 
@@ -433,8 +434,8 @@ def test_float_accepts_int_result_by_coercion():
     assert variables["x"].type_name == "float"
 
 
-def test_int_rejects_non_integer_result():
-    with pytest.raises(TypeErrorResiris):
+def test_int_division_raises_int_division_error():
+    with pytest.raises(IntDivisionError, match=r'Cant division with int type! Must use float! Error code:"IntDivisionError"'):
         run("v x int = 5 / 2\n")
 
 

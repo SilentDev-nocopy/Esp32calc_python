@@ -14,7 +14,7 @@ def test_varint_expression_and_compound_assignment_chain():
     source = (
         "v a int = 10\n"
         "v b int = 5\n"
-        "v result int = a + b * 2\n"
+        "v result float = a + b * 2\n"
         "result += 3\n"
         "result -= 2\n"
         "result *= 2\n"
