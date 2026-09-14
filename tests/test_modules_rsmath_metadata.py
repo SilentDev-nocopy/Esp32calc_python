@@ -11,5 +11,9 @@ def test_bundled_rsmath_metadata():
 
     info = interpreter.module_loader.info["RSMath"]
     assert info.name == "RSMath"
-    assert info.functions == "sqrt"
-    assert info.variables == ""
+    assert info.functions == (
+        "abs, sqrt, cbrt, pow, floor, ceil, round, ln, log10, "
+        "sin, cos, tan, asin, acos, atan, hypot, factorial, ncr, npr, "
+        "gcd, lcm, mod, min, max, clamp, is_nan, is_inf, is_finite, pythagoras"
+    )
+    assert info.variables == "PI:float, E:float"

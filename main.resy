@@ -1,6 +1,4 @@
 <include> RSMath
 
-v a float = 25
-v b float = 2
-
-print_cmd(RSMath.sqrt(a))
+v asd string = RSMath[FUNCTIONS]
+print_cmd(asd)
