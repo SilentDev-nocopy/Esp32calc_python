@@ -71,25 +71,25 @@
         If you mean a case can call more then one line of code, then yes it can. It calls every line of code in that case.
 
 22. Can a case contain another "mat"?
-        no. if happen it gives erro:"{case} Cannot call match inside a match function. Error code:"NestedMatchError
+        no. if happen it gives erro:"{case} Cannot call match inside a match function. Error code:"NestedMatchError"
 
 23. Can "mat" be used inside functions?
-        UNDEFINED
+        Yes it can be used inside a function. MOstly it will be used in functions, not in the "main scope".
 
 24. Can "mat" be used inside if/elif/else blocks?
-        UNDEFINED
+        Yes but its not idealy
 
 25. Can "return" be used inside a "mat" case?
-        UNDEFINED
+        Yes.
 
 26. Can "pass" be used inside a "mat" case?
-        UNDEFINED
+        Yes.
 
 27. What happens if the "mat" value changes while the "mat" is running?
-        UNDEFINED
+        It cant happen cause the language is a top-to-bottom read style language and also it goes functions-to-function(one by one).
 
 28. Is the "mat" value evaluated once or multiple times?
-        UNDEFINED
+        ---
 
 29. What happens if the "mat" value does not exist?
         UNDEFINED
