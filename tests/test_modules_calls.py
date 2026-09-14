@@ -175,7 +175,7 @@ def _INIT_():
 """,
     )
     variables = interpreter.run(
-        parse("<include> TestMod\nv result float = TestMod.PI\n")
+        parse("<include> TestMod\nv result float = TestMod[PI]\n")
     )
     assert variables["result"].value == 3.14
 
@@ -213,7 +213,7 @@ def _INIT_():
 """,
     )
     with pytest.raises(RuntimeErrorResiris, match="unknown module constant"):
-        interpreter.run(parse("<include> TestMod\nv result int = TestMod.SECRET\n"))
+        interpreter.run(parse("<include> TestMod\nv result int = TestMod[SECRET]\n"))
 
 
 def test_module_metadata_constants_can_be_read_with_brackets(tmp_path):

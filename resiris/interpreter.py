@@ -537,18 +537,9 @@ class Interpreter:
             )
 
         if isinstance(expression, ModuleAccessExpr):
-            if expression.member_name in {"NAME", "FUNCTIONS", "VARIABLES"}:
-                return getattr(
-                    self.module_loader.get(expression.module_name),
-                    expression.member_name,
-                )
-            try:
-                return self.module_loader.get_constant(
-                    expression.module_name,
-                    expression.member_name,
-                )
-            except RuntimeErrorResirisModule as error:
-                raise RuntimeErrorResiris(str(error)) from error
+            raise RuntimeErrorResiris(
+                "module `.` access is only valid for function calls"
+            )
 
         if isinstance(expression, ModuleConstantAccessExpr):
             try:
