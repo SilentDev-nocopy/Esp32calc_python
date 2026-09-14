@@ -105,6 +105,12 @@ class CallExpr:
 
 
 @dataclass
+class ModuleAccessExpr:
+    module_name: str
+    member_name: str
+
+
+@dataclass
 class TypeConversionExpr:
     value: object
     target_type: str

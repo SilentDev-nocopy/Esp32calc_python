@@ -8,7 +8,7 @@ from .ast_nodes import (
     Program, Include, Declaration, FunctionDef, IfStmt, ReturnStmt, PassStmt,
     AwaitStmt, PrintCmdStmt, Assignment, ExpressionStmt, Literal, Name, UnaryExpr,
     BinaryExpr, CallExpr, FunctionalObjectDef, TypeConversionExpr,
-    MatStmt, MatCase,
+    MatStmt, MatCase, ModuleAccessExpr,
 )
 
 
@@ -499,10 +499,17 @@ class Parser:
                 else:
                     self.error(
                         self.current(),
-                        "a method name is required after `.`"
+                        "a member name is required after `.`"
                     )
+
                 if method.value not in {"type", "string"}:
-                    self.error(method, "only `.type()` and `.string()` are supported here")
+                    if not isinstance(expr, Name):
+                        self.error(
+                            method,
+                            "module access requires a module name before `.`"
+                        )
+                    expr = ModuleAccessExpr(expr.name, method.value)
+                    continue
 
                 self.expect(
                     TokenType.LPAREN,

@@ -75,6 +75,107 @@ class ModuleLoader:
         self.loaded[module_name] = module
         return module
 
+    def get(self, module_name: str):
+        module = self.loaded.get(module_name)
+        if module is None:
+            raise RuntimeErrorResirisModule(
+                f'{module_name}: module is not included'
+            )
+        return module
+
+    def has_function(self, module_name: str, function_name: str) -> bool:
+        module = self.get(module_name)
+        exported = self._csv_names(self.info[module_name].functions)
+        return function_name in exported and callable(getattr(module, function_name, None))
+
+    def call_function(self, module_name: str, function_name: str, arguments: list[object]):
+        module = self.get(module_name)
+
+        if not self.has_function(module_name, function_name):
+            raise RuntimeErrorResirisModule(
+                f'{module_name}.{function_name}: unknown module function'
+            )
+
+        for argument in arguments:
+            if isinstance(argument, bool):
+                continue
+            if not isinstance(argument, (int, float, str)):
+                raise RuntimeErrorResirisModule(
+                    f'{argument!r} is not a usable modules argument! Error code:"UnknownModuleArgument"'
+                )
+
+        function = getattr(module, function_name)
+        try:
+            result = function(*arguments)
+        except TypeError as error:
+            raise RuntimeErrorResirisModule(
+                f'{module_name}.{function_name}: invalid argument count or module function arguments'
+            ) from error
+
+        if isinstance(result, (bool, int, float, str)):
+            return result
+
+        raise RuntimeErrorResirisModule(
+            f'{module_name}.{function_name}: module returned an unsupported value'
+        )
+
+    def get_constant(self, module_name: str, constant_name: str):
+        module = self.get(module_name)
+        variable_types = self._variable_descriptions(self.info[module_name].variables)
+
+        if constant_name not in variable_types:
+            raise RuntimeErrorResirisModule(
+                f'{module_name}.{constant_name}: unknown module constant'
+            )
+
+        if not hasattr(module, constant_name):
+            raise RuntimeErrorResirisModule(
+                f'{module_name}.{constant_name}: exported module constant is missing'
+            )
+
+        value = getattr(module, constant_name)
+        expected_type = variable_types[constant_name]
+        actual_type = self._python_type_name(value)
+
+        if expected_type != actual_type:
+            raise RuntimeErrorResirisModule(
+                f'{module_name}.{constant_name}: expected {expected_type}, received {actual_type}'
+            )
+
+        return value
+
+    @staticmethod
+    def _python_type_name(value) -> str:
+        if isinstance(value, bool):
+            return "bool"
+        if isinstance(value, int):
+            return "int"
+        if isinstance(value, float):
+            return "float"
+        if isinstance(value, str):
+            return "string"
+        raise RuntimeErrorResirisModule(
+            f'unsupported module value type: {type(value).__name__}'
+        )
+
+    @staticmethod
+    def _variable_descriptions(value: str) -> dict[str, str]:
+        result = {}
+        for item in value.split(","):
+            item = item.strip()
+            if not item:
+                continue
+            if ":" not in item:
+                continue
+            name, type_name = (part.strip() for part in item.split(":", 1))
+            if name and type_name:
+                result[name] = type_name
+        return result
+
+    @staticmethod
+    def _csv_names(value: str) -> list[str]:
+        return [item.strip() for item in value.split(",") if item.strip()]
+
     @staticmethod
     def _read_string_constant(module, module_name: str, constant_name: str) -> str:
         if not hasattr(module, constant_name):

@@ -21,6 +21,7 @@ from .ast_nodes import (
     UnaryExpr,
     Include,
     MatStmt,
+    ModuleAccessExpr,
 )
 from .tokenizer import ResirisSyntaxError
 from .module_loader import ModuleLoader, RuntimeErrorResirisModule
@@ -507,6 +508,13 @@ class Interpreter:
                 for argument in expression.arguments
             ]
 
+            if isinstance(expression.function, ModuleAccessExpr):
+                return self.module_loader.call_function(
+                    expression.function.module_name,
+                    expression.function.member_name,
+                    arguments,
+                )
+
             if isinstance(expression.function, Name):
                 function_name = expression.function.name
 
@@ -526,6 +534,20 @@ class Interpreter:
             raise FunctionError(
                 "the function call target must currently be a name or FunctionalObject"
             )
+
+        if isinstance(expression, ModuleAccessExpr):
+            if expression.member_name in {"NAME", "FUNCTIONS", "VARIABLES"}:
+                return getattr(
+                    self.module_loader.get(expression.module_name),
+                    expression.member_name,
+                )
+            try:
+                return self.module_loader.get_constant(
+                    expression.module_name,
+                    expression.member_name,
+                )
+            except RuntimeErrorResirisModule as error:
+                raise RuntimeErrorResiris(str(error)) from error
 
         raise RuntimeErrorResiris(
             f"The current interpreter version does not recognize this expression: "
