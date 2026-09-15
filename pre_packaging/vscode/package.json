@@ -1,8 +1,8 @@
 {
-  "name": "resiris-seti-file-icons",
-  "displayName": "Resiris Seti File Icons",
-  "description": "Seti File Icon Theme with a custom RESY icon for .resy files.",
-  "version": "0.1.0",
+  "name": "resiris-language-support",
+  "displayName": "Resiris Language Support",
+  "description": "Language support and Seti file icons for the Resiris programming language.",
+  "version": "0.2.0",
   "publisher": "resiris",
   "license": "MIT",
   "icon": "icons/resy.png",
@@ -10,15 +10,45 @@
     "vscode": "^1.80.0"
   },
   "categories": [
-    "Themes"
+    "Programming Languages",
+    "Themes",
+    "Snippets"
   ],
   "contributes": {
+    "languages": [
+      {
+        "id": "resiris",
+        "aliases": ["Resiris", "resy"],
+        "extensions": [".resy"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "resiris",
+        "scopeName": "source.resiris",
+        "path": "./syntaxes/resiris.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "resiris",
+        "path": "./snippets/resiris.json"
+      }
+    ],
     "iconThemes": [
       {
         "id": "resiris-seti",
         "label": "Resiris Seti",
         "path": "./icons/resiris-seti-icon-theme.json"
       }
-    ]
+    ],
+    "configurationDefaults": {
+      "[resiris]": {
+        "editor.insertSpaces": false,
+        "editor.detectIndentation": false,
+        "editor.tabSize": 4
+      }
+    }
   }
 }

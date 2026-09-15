@@ -8,8 +8,8 @@ print_cmd(negativ_szam)
 
 ## variansdadasasa
 
-start():
-	print_cmd("Program started")
+##fn start():
+##	print_cmd("Program started")
 
-process(delta):
+fn process(delta):
 	print_cmd(delta)

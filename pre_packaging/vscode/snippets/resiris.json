@@ -1,0 +1,47 @@
+{
+  "Resiris start": {
+    "prefix": "start",
+    "body": [
+      "start():",
+      "\t$0"
+    ],
+    "description": "Resiris lifecycle entry point"
+  },
+  "Resiris process": {
+    "prefix": "process",
+    "body": [
+      "process(delta):",
+      "\t$0"
+    ],
+    "description": "Resiris repeated lifecycle function"
+  },
+  "Resiris function": {
+    "prefix": "fn",
+    "body": [
+      "fn ${1:name}(${2}):",
+      "\t$0"
+    ],
+    "description": "Resiris function definition"
+  },
+  "Resiris variable": {
+    "prefix": "v",
+    "body": [
+      "v ${1:name} ${2:int} = ${3:0}$0"
+    ],
+    "description": "Resiris varint declaration"
+  },
+  "Resiris constant": {
+    "prefix": "c",
+    "body": [
+      "c ${1:name} ${2:int} = ${3:0}$0"
+    ],
+    "description": "Resiris constant declaration"
+  },
+  "Resiris include": {
+    "prefix": "include",
+    "body": [
+      "<include> ${1:ModuleName}$0"
+    ],
+    "description": "Resiris module include"
+  }
+}

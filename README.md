@@ -52,7 +52,11 @@ Run this from inside the project folder:
 ./install_reseris.sh
 ```
 
-The installer creates the `resiris` symlink in `~/.local/bin`. It also installs the `.resy` Linux file-manager integration and the existing Seti-based VS Code extension from `pre_packaging`. Resiris is terminal-only and is not installed as an application in the desktop app menu.
+The installer creates the `resiris` symlink in `~/.local/bin` and installs the `.resy` Linux file-manager integration. If a VS Code-compatible CLI is available, the installer explicitly asks whether the **Resiris Language Support** extension should also be installed. The extension is **not** installed automatically.
+
+The VS Code extension provides `.resy` language support (syntax highlighting, Resiris indentation settings and snippets) and the custom Resiris `.resy` file icon through the Resiris Seti icon theme. Installing the terminal tool alone does not install the VS Code extension or its VS Code icon theme.
+
+You can also install the VS Code extension directly from VS Code without installing the terminal tool.
 
 Then you can run Resiris from any terminal:
 
@@ -82,7 +86,7 @@ Invalid command-line arguments are reported separately as `Resiris CLI error:` m
 
 ## Removing it
 
-To remove the installed terminal command, `.resy` Linux integration and VS Code extension, run:
+To remove the installed terminal command, `.resy` Linux integration and any installed Resiris VS Code extension, run:
 
 ```bash
 ./uninstall_reseris.sh
