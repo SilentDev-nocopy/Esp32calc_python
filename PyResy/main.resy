@@ -1,12 +1,11 @@
 <include> RSMath
 
-c FPS float = 10.0
-
 v negativ_szam int = -1
 
 v asd string = RSMath[FUNCTIONS]
 
-pass
+## FPS: hányszor fut a PROCESS egy másodperc alatt
+c FPS float = 30.0
 
-START():
-	
+PROCESS(FPS):
+	print_cmd("FPS: " + FPS.string())

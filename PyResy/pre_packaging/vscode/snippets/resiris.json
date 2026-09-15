@@ -1,20 +1,4 @@
 {
-  "Resiris start": {
-    "prefix": ["START", "start"],
-    "body": [
-      "START():",
-      "\t$0"
-    ],
-    "description": "Resiris lifecycle entry point"
-  },
-  "Resiris process": {
-    "prefix": ["PROCESS", "process"],
-    "body": [
-      "PROCESS(FPS):",
-      "\t$0"
-    ],
-    "description": "Resiris repeated lifecycle function"
-  },
   "Resiris function": {
     "prefix": "fn",
     "body": [

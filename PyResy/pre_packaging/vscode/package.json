@@ -2,10 +2,14 @@
   "name": "resiris-language-support",
   "displayName": "Resiris Language Support",
   "description": "Language support and Seti file icons for the Resiris programming language.",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "publisher": "resiris",
   "license": "MIT",
   "icon": "icons/resy.png",
+  "main": "./extension.js",
+  "activationEvents": [
+    "onLanguage:resiris"
+  ],
   "engines": {
     "vscode": "^1.80.0"
   },

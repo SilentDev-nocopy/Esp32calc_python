@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 VSCODE = ROOT / "pre_packaging" / "vscode"
-VSIX = VSCODE / "build" / "resiris-language-support-0.3.4.vsix"
+VSIX = VSCODE / "build" / "resiris-language-support-0.4.0.vsix"
 
 
 def test_extension_manifest_declares_resy_language_and_icon_theme():
@@ -77,23 +77,24 @@ def test_grammar_contains_current_resiris_keywords_and_lifecycle():
     assert "print_cmd" in text
     assert "RSMath" not in text  # modules are intentionally generic
 
-
 def test_snippets_use_tab_indentation():
     snippets = json.loads(
         (VSCODE / "snippets" / "resiris.json").read_text(encoding="utf-8")
     )
 
-    assert snippets["Resiris start"]["body"][1].startswith("\t")
-    assert snippets["Resiris process"]["body"][1].startswith("\t")
     assert snippets["Resiris function"]["body"][1].startswith("\t")
 
-def test_lifecycle_snippets_trigger_from_lowercase_typing():
-    snippets = json.loads(
-        (VSCODE / "snippets" / "resiris.json").read_text(encoding="utf-8")
-    )
 
-    assert "start" in snippets["Resiris start"]["prefix"]
-    assert "process" in snippets["Resiris process"]["prefix"]
+def test_completion_provider_handles_lifecycle_and_fps():
+    source = (VSCODE / "extension.js").read_text(encoding="utf-8")
+
+    assert '"start"' in source
+    assert '"process"' in source
+    assert "START():" in source
+    assert "PROCESS(FPS):" in source
+    assert "c FPS float = 30.0" in source
+    assert "hasFpsConstant" in source
+    assert "registerCompletionItemProvider" in source
 
 
 def test_theme_gives_every_resiris_scope_its_own_color():
@@ -140,6 +141,7 @@ def test_built_vsix_contains_language_support_files():
 
     expected = {
         "extension/package.json",
+        "extension/extension.js",
         "extension/language-configuration.json",
         "extension/syntaxes/resiris.tmLanguage.json",
         "extension/snippets/resiris.json",

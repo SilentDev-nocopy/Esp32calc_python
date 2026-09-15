@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT / "build"
 STAGING = OUT / "extension"
-VERSION = "0.3.4"
+VERSION = "0.4.0"
 EXTENSION_ID = "resiris-language-support"
 
 cands = [
@@ -53,7 +53,7 @@ if STAGING.exists():
 (STAGING / "themes").mkdir(parents=True)
 OUT.mkdir(exist_ok=True)
 
-for filename in ("package.json", "language-configuration.json"):
+for filename in ("package.json", "language-configuration.json", "extension.js"):
     shutil.copy2(ROOT / filename, STAGING / filename)
 shutil.copy2(ROOT / "icons/resy.png", STAGING / "icons/resy.png")
 shutil.copy2(ROOT / "syntaxes/resiris.tmLanguage.json", STAGING / "syntaxes/resiris.tmLanguage.json")
