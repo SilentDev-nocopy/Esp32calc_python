@@ -4,7 +4,7 @@
 
  This repository provides the PC-side development environment: a tokenizer, parser, AST and interpreter for .resy source files, along with optional editor and shell integration.
 
-For now, only the Python version aka. "Pyresi" is available!
+For now, only the Python version aka. "PyResi" is available!
 
 Resiris is a separate project from Galena.
 ---
