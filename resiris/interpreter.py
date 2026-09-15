@@ -102,7 +102,6 @@ class Interpreter:
     Does NOT execute yet:
       - mat
       - await
-      - module function calls
 
     Scope:
     - function parameters and v variables created inside functions are local
