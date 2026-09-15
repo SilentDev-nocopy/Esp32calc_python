@@ -313,7 +313,7 @@ class Interpreter:
         except RuntimeErrorResiris as error:
             line = getattr(statement, "source_line", None)
             column = getattr(statement, "source_column", None)
-            if line is not None and not str(error).startswith("sor "):
+            if line is not None:
                 location = f"line {line}"
                 if column is not None:
                     location += f", column {column}"

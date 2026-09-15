@@ -71,7 +71,7 @@ class Parser:
 
     def error(self, token: Token, message: str) -> None:
         raise ResirisSyntaxError(
-            f"{token.line}:{token.column}: {message}; kapott: "
+            f"{token.line}:{token.column}: {message}; got: "
             f"{token.type.name} ({token.value!r})"
         )
 

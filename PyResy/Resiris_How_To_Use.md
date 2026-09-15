@@ -49,7 +49,6 @@ The currently defined Resiris types are:
 - `float`
 - `string`
 - `bool`
-- `Vector2`
 - `ResirisModuleObject`
 - `FunctionalObject`
 
