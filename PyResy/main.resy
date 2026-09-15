@@ -4,7 +4,7 @@ v negativ_szam int = -1
 
 v asd string = RSMath[FUNCTIONS]
 
-## FPS: hányszor fut a PROCESS egy másodperc alatt
+## FPS: how many times PROCESS runs per second
 c FPS float = 30.0
 
 PROCESS(FPS):

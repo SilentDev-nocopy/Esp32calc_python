@@ -28,7 +28,7 @@ function activate(context) {
           process.insertText = new vscode.SnippetString("PROCESS(FPS):\n\t$0");
         } else {
           process.insertText = new vscode.SnippetString(
-            "## FPS: hányszor fut a PROCESS egy másodperc alatt\n" +
+            "## FPS: how many times PROCESS runs per second\n" +
               "c FPS float = 30.0\n" +
               "\n" +
               "PROCESS(FPS):\n" +
