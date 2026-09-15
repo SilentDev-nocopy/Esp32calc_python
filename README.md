@@ -1,8 +1,8 @@
 # Resiris
 
-    A PC-side development environment and interpreter for the Resiris programming language.
+> Resiris is the programming language designed for [Galena](https://github.com/SilentDev-nocopy/Galena.git), a standalone programmable computing environment.
 
-Resiris is the programming language designed for [Galena](https://github.com/SilentDev-nocopy/Galena.git), a standalone programmable computing environment. This repository provides the PC-side development environment: a tokenizer, parser, AST and interpreter for .resy source files, along with optional editor and shell integration.
+ This repository provides the PC-side development environment: a tokenizer, parser, AST and interpreter for .resy source files, along with optional editor and shell integration.
 
 Resiris is a separate project from Galena.
 ---
