@@ -1,6 +1,6 @@
 <include> RSMath
 
-c FPS float = 1.0
+c FPS float = 5.0
 
 v negativ_szam int = -1
 
