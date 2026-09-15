@@ -1,4 +1,15 @@
 <include> RSMath
 
+v negativ_szam int = -1
+
 v asd string = RSMath[FUNCTIONS]
-print_cmd(asd)
+pass rint_cmd(asd)
+print_cmd(negativ_szam)
+
+## variansdadasasa
+
+start():
+	print_cmd("Program started")
+
+process(delta):
+	print_cmd(delta)
