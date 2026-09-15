@@ -19,8 +19,7 @@
     ["'", "'"]
   ],
   "indentationRules": {
-    "increaseIndentPattern": "^\\s*(?:.*:)\\s*(?:##.*)?$",
-    "decreaseIndentPattern": "^\\t+(?=\\S)"
+    "increaseIndentPattern": "^\\s*(?:.*:)\\s*(?:##.*)?$"
   },
   "onEnterRules": [
     {

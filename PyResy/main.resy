@@ -9,9 +9,4 @@ v asd string = RSMath[FUNCTIONS]
 pass
 
 START():
-	print_cmd("Program started")
-
-PROCESS(FPS):
-	print_cmd(FPS)
-	print_cmd(negativ_szam)
-	print_cmd(asd)
+	

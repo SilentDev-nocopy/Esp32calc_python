@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 VSCODE = ROOT / "pre_packaging" / "vscode"
-VSIX = VSCODE / "build" / "resiris-language-support-0.3.1.vsix"
+VSIX = VSCODE / "build" / "resiris-language-support-0.3.3.vsix"
 
 
 def test_extension_manifest_declares_resy_language_and_icon_theme():
@@ -45,6 +45,25 @@ def test_language_configuration_forces_tabs():
     assert defaults["[resiris]"]["editor.tabSize"] == 4
 
 
+def test_language_configuration_keeps_function_body_indented():
+    import re
+
+    config = json.loads(
+        (VSCODE / "language-configuration.json").read_text(encoding="utf-8")
+    )
+    rules = config["indentationRules"]
+
+    increase = re.compile(rules["increaseIndentPattern"])
+    assert increase.match("START():")
+    assert increase.match("PROCESS(FPS):")
+    assert increase.match("if x == 5:")
+
+    decrease = rules.get("decreaseIndentPattern")
+    if decrease:
+        assert not re.compile(decrease).match("\tprint_cmd(FPS)")
+        assert not re.compile(decrease).match("\t\tv x int = 0")
+
+
 def test_grammar_contains_current_resiris_keywords_and_lifecycle():
     grammar = json.loads(
         (VSCODE / "syntaxes" / "resiris.tmLanguage.json").read_text(encoding="utf-8")
@@ -67,6 +86,14 @@ def test_snippets_use_tab_indentation():
     assert snippets["Resiris start"]["body"][1].startswith("\t")
     assert snippets["Resiris process"]["body"][1].startswith("\t")
     assert snippets["Resiris function"]["body"][1].startswith("\t")
+
+def test_lifecycle_snippets_trigger_from_lowercase_typing():
+    snippets = json.loads(
+        (VSCODE / "snippets" / "resiris.json").read_text(encoding="utf-8")
+    )
+
+    assert "start" in snippets["Resiris start"]["prefix"]
+    assert "process" in snippets["Resiris process"]["prefix"]
 
 
 def test_theme_gives_every_resiris_scope_its_own_color():

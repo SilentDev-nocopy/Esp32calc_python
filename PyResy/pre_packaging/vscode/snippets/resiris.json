@@ -1,6 +1,6 @@
 {
   "Resiris start": {
-    "prefix": "START",
+    "prefix": ["START", "start"],
     "body": [
       "START():",
       "\t$0"
@@ -8,7 +8,7 @@
     "description": "Resiris lifecycle entry point"
   },
   "Resiris process": {
-    "prefix": "PROCESS",
+    "prefix": ["PROCESS", "process"],
     "body": [
       "PROCESS(FPS):",
       "\t$0"
