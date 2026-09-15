@@ -24,14 +24,5 @@ rm -f "$HOME/.local/share/applications/resiris.desktop"
 command -v update-mime-database >/dev/null 2>&1 && \
     update-mime-database "$HOME/.local/share/mime" >/dev/null 2>&1 || true
 
-# Remove the current Resiris VS Code extension. Also remove the old file-icon
-# extension ID from previous releases so upgrades/uninstalls leave no residue.
-for cmd in code code-insiders codium; do
-    if command -v "$cmd" >/dev/null 2>&1; then
-        "$cmd" --uninstall-extension resiris.resiris-language-support >/dev/null 2>&1 || true
-        "$cmd" --uninstall-extension resiris.resiris-seti-file-icons >/dev/null 2>&1 || true
-    fi
-done
-
-echo "Removed Resiris Linux file integration and VS Code extension."
+echo "Removed Resiris Linux file integration."
 echo "Your project files and .resy programs were NOT deleted."
