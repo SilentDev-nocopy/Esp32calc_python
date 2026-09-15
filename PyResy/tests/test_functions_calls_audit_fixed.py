@@ -597,7 +597,7 @@ def test_function_error_from_nested_call_propagates():
 
 
 def test_start_function_body_can_contain_function_call():
-    from resiris.ast_nodes import LifecycleDef, ExpressionStmt, CallExpr
+    from resiris.ast_nodes import FunctionDef, LifecycleDef, ExpressionStmt, CallExpr
     program = parse(
         "fn calculate():\n"
         "\treturn 42\n"
@@ -612,7 +612,7 @@ def test_start_function_body_can_contain_function_call():
 
 
 def test_process_function_body_can_contain_function_call():
-    from resiris.ast_nodes import LifecycleDef, ExpressionStmt, CallExpr
+    from resiris.ast_nodes import FunctionDef, LifecycleDef, ExpressionStmt, CallExpr
     program = parse(
         "fn calculate():\n"
         "\treturn 42\n"

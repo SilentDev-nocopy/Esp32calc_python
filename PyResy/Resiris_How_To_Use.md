@@ -102,6 +102,7 @@ Global varints can be read from a function.
 ## 7. `START()`
 
 `START()` is the program entry point and runs once when the program starts.
+It is a lifecycle declaration, not a normal `fn`.
 
 ```resy
 START():
@@ -112,14 +113,17 @@ START():
 
 ## 8. `PROCESS(FPS)`
 
-`PROCESS(FPS)` is the repeating lifecycle function. `FPS` is a float argument supplied by the runtime.
+`PROCESS(FPS)` is the repeating lifecycle declaration. The parameter is always named `FPS` and has type `float`.
+The global program constant `c FPS float` determines how often the lifecycle runs.
 
 ```resy
+c FPS float = 30.0
+
 PROCESS(FPS):
-	print_cmd("Processing")
+	print_cmd(FPS)
 ```
 
-`FPS` is supplied by the runtime as a `float`. The program defines the frame rate with a global constant, for example `c FPS float = 30.0`. The runtime uses that value to schedule the repeated `PROCESS(FPS)` calls; the program does not calculate `delta`.
+The timing is handled by the runtime; the Resiris program does not calculate a `delta` value.
 
 ---
 
@@ -499,9 +503,9 @@ Blocks use TAB indentation.
 
 `fn` defines a function.
 
-`START()` is the program entry point and runs once when the program starts.
+`START()` is the program entry point.
 
-`PROCESS(FPS)` is the repeating lifecycle function. `FPS` is a float argument supplied by the runtime.
+`PROCESS(FPS)` is a repeating lifecycle declaration.
 
 `mat` is a control-flow statement.
 

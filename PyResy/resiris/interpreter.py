@@ -21,10 +21,10 @@ from .ast_nodes import (
     FunctionalObjectDef,
     UnaryExpr,
     Include,
-    LifecycleDef,
     MatStmt,
     ModuleAccessExpr,
     ModuleConstantAccessExpr,
+    LifecycleDef,
 )
 from .tokenizer import ResirisSyntaxError
 from .module_loader import ModuleLoader, RuntimeErrorResirisModule
@@ -114,14 +114,16 @@ class Interpreter:
     def __init__(self, modules_dir: Path | str = "Modules"):
         self.variables: dict[str, Variable] = {}
         self.functions: dict[str, FunctionDef] = {}
-        self.lifecycle: dict[str, LifecycleDef] = {}
+        self.start_lifecycle: LifecycleDef | None = None
+        self.process_lifecycle: LifecycleDef | None = None
         self.scope_stack: list[dict[str, Variable]] = []
         self.module_loader = ModuleLoader(modules_dir)
         self.modules: dict[str, object] = self.module_loader.loaded
 
-    def run(self, program: Program, process_frames: int | None = None, sleep_fn=time.sleep) -> dict[str, Variable]:
-        # Top-level function/lifecycle definitions are registered first, so
-        # they can refer to definitions appearing later in the source.
+    def run(self, program: Program) -> dict[str, Variable]:
+        # Register normal functions and lifecycle definitions before executing
+        # top-level statements. This keeps function/lifecycle definitions
+        # independent from their position in the source file.
         top_level_declaration_names = {
             statement.name
             for statement in program.statements
@@ -136,100 +138,109 @@ class Interpreter:
                     )
                 self.register_function(statement)
             elif isinstance(statement, LifecycleDef):
-                if statement.name in top_level_declaration_names:
-                    raise FunctionError(
-                        f"{statement.name}: the name is already used as a variable"
-                    )
                 self.register_lifecycle(statement)
 
+        # Execute ordinary top-level code first. Lifecycle bodies are not part
+        # of ordinary top-level execution.
         for statement in program.statements:
             if isinstance(statement, (FunctionDef, LifecycleDef)):
                 continue
-
             self.execute(statement)
 
-        self.run_start()
-
-        if process_frames is not None:
-            self.run_process_frames(process_frames, sleep_fn=sleep_fn)
+        # START() is the program entry point and runs once.
+        if self.start_lifecycle is not None:
+            self.execute_start()
 
         return self.variables
 
     def register_lifecycle(self, statement: LifecycleDef):
-        if statement.name in self.lifecycle:
-            raise FunctionError(
-                f"{statement.name}: the lifecycle function already exists"
-            )
-
-        if statement.name in self.functions:
-            raise FunctionError(
-                f"{statement.name}: the name is already used as a function"
-            )
-
-        self.lifecycle[statement.name] = statement
-
-    def run_start(self):
-        start = self.lifecycle.get("START")
-        if start is None:
+        if statement.name == "START":
+            if self.start_lifecycle is not None:
+                raise FunctionError("START: the lifecycle already exists")
+            self.start_lifecycle = statement
             return
 
-        self._call_lifecycle(start, [])
-
-    def run_process_frames(self, frame_count: int, sleep_fn=time.sleep):
-        if not isinstance(frame_count, int) or isinstance(frame_count, bool) or frame_count < 0:
-            raise ValueError("frame_count must be a non-negative int")
-
-        process = self.lifecycle.get("PROCESS")
-        if process is None or frame_count == 0:
+        if statement.name == "PROCESS":
+            if self.process_lifecycle is not None:
+                raise FunctionError("PROCESS: the lifecycle already exists")
+            self.process_lifecycle = statement
             return
 
-        fps_variable = self.variables.get("FPS")
-        if fps_variable is None:
-            raise UnknownVariableError("FPS: a global float constant is required for PROCESS")
+        raise FunctionError(f"{statement.name}: unknown lifecycle")
 
-        if not fps_variable.is_constant:
-            raise TypeErrorResiris("FPS: PROCESS requires FPS to be a global constant")
+    def execute_start(self):
+        lifecycle = self.start_lifecycle
+        if lifecycle is None:
+            return
+        self._execute_lifecycle(lifecycle, None)
 
-        if fps_variable.type_name != "float":
-            raise TypeErrorResiris("FPS: PROCESS requires FPS to be a float")
+    def _get_process_fps(self) -> float:
+        variable = self.variables.get("FPS")
+        if variable is None:
+            raise RuntimeErrorResiris(
+                "PROCESS(FPS) requires a global constant `c FPS float`"
+            )
+        if not variable.is_constant or variable.type_name != "float":
+            raise TypeErrorResiris(
+                "PROCESS(FPS) requires `FPS` to be a global float constant"
+            )
+        return variable.value
 
-        fps = fps_variable.value
-        if fps <= 0:
-            raise TypeErrorResiris("FPS: PROCESS requires FPS to be greater than 0")
-
-        period = 1.0 / fps
-
-        for frame_index in range(frame_count):
-            if frame_index > 0:
-                sleep_fn(period)
-            self._call_lifecycle(process, [fps])
-
-    def _call_lifecycle(self, lifecycle: LifecycleDef, arguments: list[object]):
+    def _execute_lifecycle(self, lifecycle: LifecycleDef, fps: float | None):
         local_scope: dict[str, Variable] = {}
-
-        if lifecycle.name == "START":
-            if arguments:
-                raise FunctionError("START does not accept arguments")
-        elif lifecycle.name == "PROCESS":
-            if len(arguments) != 1:
-                raise FunctionError("PROCESS requires exactly one argument")
-            fps = arguments[0]
-            if not isinstance(fps, float):
-                raise TypeErrorResiris("PROCESS FPS argument must be a float")
-            local_scope["FPS"] = Variable(fps, "float", is_constant=False)
-        else:
-            raise FunctionError(f"{lifecycle.name}: unknown lifecycle function")
+        if lifecycle.name == "PROCESS":
+            if fps is None:
+                raise RuntimeErrorResiris("PROCESS(FPS) requires an FPS value")
+            local_scope["FPS"] = Variable(
+                value=fps,
+                type_name="float",
+                is_constant=False,
+            )
 
         self.scope_stack.append(local_scope)
         try:
-            try:
-                self.execute_block(lifecycle.body)
-            except ReturnSignal:
-                raise FunctionError(
-                    f"{lifecycle.name}: return cannot be used in a lifecycle function"
-                )
+            self.execute_block(lifecycle.body)
+        except ReturnSignal:
+            return
         finally:
             self.scope_stack.pop()
+
+    def run_process_frames(self, frame_count: int) -> None:
+        if frame_count < 0:
+            raise ValueError("frame_count must not be negative")
+        lifecycle = self.process_lifecycle
+        if lifecycle is None:
+            return
+
+        fps = self._get_process_fps()
+        if fps <= 0.0:
+            raise TypeErrorResiris("FPS must be greater than 0.0")
+
+        for _ in range(frame_count):
+            self._execute_lifecycle(lifecycle, fps)
+
+    def run_process_forever(self) -> None:
+        lifecycle = self.process_lifecycle
+        if lifecycle is None:
+            return
+
+        fps = self._get_process_fps()
+        if fps <= 0.0:
+            raise TypeErrorResiris("FPS must be greater than 0.0")
+
+        frame_period = 1.0 / fps
+        next_frame = time.monotonic()
+
+        while True:
+            self._execute_lifecycle(lifecycle, fps)
+            next_frame += frame_period
+            sleep_time = next_frame - time.monotonic()
+            if sleep_time > 0.0:
+                time.sleep(sleep_time)
+            else:
+                # PROCESS took longer than one frame period. Start the next
+                # frame immediately instead of accumulating sleep delay.
+                next_frame = time.monotonic()
 
     def register_function(self, statement: FunctionDef):
         if statement.name in self.functions:

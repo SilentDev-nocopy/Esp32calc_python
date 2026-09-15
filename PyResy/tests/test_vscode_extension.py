@@ -59,8 +59,8 @@ def test_snippets_use_tab_indentation():
         (VSCODE / "snippets" / "resiris.json").read_text(encoding="utf-8")
     )
 
-    assert snippets["Resiris START"]["body"][1].startswith("\t")
-    assert snippets["Resiris PROCESS"]["body"][1].startswith("\t")
+    assert snippets["Resiris start"]["body"][1].startswith("\t")
+    assert snippets["Resiris process"]["body"][1].startswith("\t")
     assert snippets["Resiris function"]["body"][1].startswith("\t")
 
 

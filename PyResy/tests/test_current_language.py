@@ -210,6 +210,90 @@ def test_parser_builds_function():
     assert isinstance(function.body[0], ReturnStmt)
 
 
+def test_parser_builds_start_lifecycle():
+    from resiris.ast_nodes import LifecycleDef
+
+    tree = parse(
+        "START():\n"
+        "\tpass\n"
+    )
+
+    lifecycle = tree.statements[0]
+    assert isinstance(lifecycle, LifecycleDef)
+    assert lifecycle.name == "START"
+    assert lifecycle.parameter_name is None
+
+
+def test_parser_builds_process_lifecycle_with_fps():
+    from resiris.ast_nodes import LifecycleDef
+
+    tree = parse(
+        "PROCESS(FPS):\n"
+        "\tprint_cmd(FPS)\n"
+    )
+
+    lifecycle = tree.statements[0]
+    assert isinstance(lifecycle, LifecycleDef)
+    assert lifecycle.name == "PROCESS"
+    assert lifecycle.parameter_name == "FPS"
+
+
+def test_process_requires_fps_parameter_name():
+    with pytest.raises(ResirisSyntaxError):
+        parse(
+            "PROCESS(delta):\n"
+            "\tpass\n"
+        )
+
+
+def test_start_runs_once():
+    source = (
+        "v count int = 0\n"
+        "START():\n"
+        "\tcount += 1\n"
+    )
+    interpreter = Interpreter()
+    interpreter.run(parse(source))
+    assert interpreter.variables["count"].value == 1
+
+
+def test_process_receives_global_fps_as_float():
+    source = (
+        "c FPS float = 2.5\n"
+        "v seen float = 0.0\n"
+        "PROCESS(FPS):\n"
+        "\tseen = FPS\n"
+    )
+    interpreter = Interpreter()
+    interpreter.run(parse(source))
+    interpreter.run_process_frames(1)
+    assert interpreter.variables["seen"].value == 2.5
+
+
+def test_process_frames_runs_requested_number_of_times():
+    source = (
+        "c FPS float = 10.0\n"
+        "v count int = 0\n"
+        "PROCESS(FPS):\n"
+        "\tcount += 1\n"
+    )
+    interpreter = Interpreter()
+    interpreter.run(parse(source))
+    interpreter.run_process_frames(3)
+    assert interpreter.variables["count"].value == 3
+
+
+def test_process_requires_global_float_fps_constant():
+    with pytest.raises(RuntimeErrorResiris):
+        interpreter = Interpreter()
+        interpreter.run(parse(
+            "v FPS float = 30.0\n"
+            "PROCESS(FPS):\n"
+            "\tpass\n"
+        ))
+        interpreter.run_process_frames(1)
+
+
 def test_parser_builds_mat():
     tree = parse(
         "v x int = 2\n"

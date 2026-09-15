@@ -86,7 +86,9 @@ def run_file(source_path: Path, show_frontend: bool = False) -> int:
         tokens = Tokenizer().tokenize(source)
         program = Parser(tokens).parse()
 
-        Interpreter().run(program)
+        interpreter = Interpreter()
+        interpreter.run(program)
+        interpreter.run_process_forever()
 
         if show_frontend:
             print()
@@ -97,6 +99,11 @@ def run_file(source_path: Path, show_frontend: bool = False) -> int:
             print()
             print("<AST>")
             print(ast_to_dict(program))
+
+    except KeyboardInterrupt:
+        print()
+        print(f"{GREEN}Resiris program stopped.{RESET}")
+        return 0
 
     except (ResirisSyntaxError, RuntimeErrorResiris) as error:
         print(

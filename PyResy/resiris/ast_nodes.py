@@ -32,7 +32,7 @@ class FunctionDef:
 @dataclass
 class LifecycleDef:
     name: str
-    parameters: list[tuple[str, str]]
+    parameter_name: str | None
     body: list[object]
 
 
