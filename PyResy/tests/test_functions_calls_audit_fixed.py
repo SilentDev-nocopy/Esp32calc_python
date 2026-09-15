@@ -124,7 +124,7 @@ def test_parameter_does_not_escape_function():
         )
 
 
-def test_function_can_read_global_varint():
+def test_function_can_read_global_variant():
     env = run(
         "v global_value int = 10\n"
         "fn get():\n"
@@ -144,7 +144,7 @@ def test_function_can_read_global_constant():
     assert env["result"].value == 10
 
 
-def test_function_can_modify_global_varint():
+def test_function_can_modify_global_variant():
     env = run(
         "v global_value int = 10\n"
         "fn change():\n"
@@ -423,7 +423,7 @@ def test_function_can_return_global_value():
     assert env["result"].value == 123
 
 
-def test_function_call_result_can_be_assigned_to_varint():
+def test_function_call_result_can_be_assigned_to_variant():
     env = run(
         "fn get():\n"
         "\treturn 42\n"

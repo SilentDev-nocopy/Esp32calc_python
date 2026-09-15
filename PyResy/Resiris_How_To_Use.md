@@ -16,15 +16,15 @@ Resiris uses `##` for comments.
 
 ---
 
-## 2. Varints
+## 2. Variants
 
-A Resiris variable is called a **varint** and is declared with `v`.
+A Resiris variable is called a **variant** and is declared with `v`.
 
 ```resy
 v number int = 10
 ```
 
-The type of the varint is part of its declaration.
+The type of the variant is part of its declaration.
 
 ---
 
@@ -95,7 +95,7 @@ fn calculate():
 
 Function parameters and local variables belong to the function's local scope.
 
-Global varints can be read from a function.
+Global variants can be read from a function.
 
 ---
 
@@ -270,7 +270,7 @@ A `mat` cannot be nested inside another `mat` case.
 
 `type()` is a built-in function used for type conversion and type querying.
 
-It can be called on a varint or constant.
+It can be called on a variant or constant.
 
 ### Type querying
 
@@ -497,7 +497,7 @@ Blocks use TAB indentation.
 
 `##` starts a comment.
 
-`v` means varint.
+`v` means variant.
 
 `c` means constant.
 

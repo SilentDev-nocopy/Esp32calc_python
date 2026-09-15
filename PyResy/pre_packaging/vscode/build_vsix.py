@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 OUT = ROOT / "build"
 STAGING = OUT / "extension"
-VERSION = "0.3.3"
+VERSION = "0.3.4"
 EXTENSION_ID = "resiris-language-support"
 
 cands = [

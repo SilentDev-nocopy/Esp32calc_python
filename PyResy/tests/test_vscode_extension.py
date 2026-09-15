@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 VSCODE = ROOT / "pre_packaging" / "vscode"
-VSIX = VSCODE / "build" / "resiris-language-support-0.3.3.vsix"
+VSIX = VSCODE / "build" / "resiris-language-support-0.3.4.vsix"
 
 
 def test_extension_manifest_declares_resy_language_and_icon_theme():

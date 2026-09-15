@@ -10,7 +10,7 @@ def run(source: str):
     return interpreter.run(ast)
 
 
-def test_varint_expression_and_compound_assignment_chain():
+def test_variant_expression_and_compound_assignment_chain():
     source = (
         "v a int = 10\n"
         "v b int = 5\n"

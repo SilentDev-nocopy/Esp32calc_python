@@ -28,7 +28,7 @@
     "body": [
       "v ${1:name} ${2:int} = ${3:0}$0"
     ],
-    "description": "Resiris varint declaration"
+    "description": "Resiris variant declaration"
   },
   "Resiris constant": {
     "prefix": "c",

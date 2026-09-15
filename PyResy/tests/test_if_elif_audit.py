@@ -521,7 +521,7 @@ def test_return_inside_elif_returns_selected_value():
 # SCOPE / DECLARATIONS IN BRANCHES
 # ---------------------------------------------------------------------------
 
-def test_branch_can_assign_existing_global_varint():
+def test_branch_can_assign_existing_global_variant():
     env = run(
         "v x int = 0\n"
         "if true:\n"
@@ -530,7 +530,7 @@ def test_branch_can_assign_existing_global_varint():
     assert env["x"].value == 9
 
 
-def test_branch_can_read_global_varint():
+def test_branch_can_read_global_variant():
     env = run(
         "v x int = 9\n"
         "v result int = 0\n"

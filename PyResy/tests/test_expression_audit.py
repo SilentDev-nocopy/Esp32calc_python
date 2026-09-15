@@ -205,7 +205,7 @@ def test_unary_plus_can_be_used_in_expression():
 
 
 # ===========================================================================
-# OPERÁTOROK VARINTEKKEL
+# OPERÁTOROK VARIANTOKKAL
 # ===========================================================================
 
 def test_binary_operators_use_variable_values():
