@@ -1,6 +1,6 @@
 import pytest
 
-from resiris.interpreter import Interpreter, RuntimeErrorResiris, TypeErrorResiris
+from resiris.interpreter import Interpreter, RuntimeErrorResiris, ResirisTypeError
 from resiris.parser import Parser
 from resiris.tokenizer import Tokenizer
 

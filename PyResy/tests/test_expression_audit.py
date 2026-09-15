@@ -19,7 +19,7 @@ from resiris.interpreter import (
     IntDivisionError,
     Interpreter,
     RuntimeErrorResiris,
-    TypeErrorResiris,
+    ResirisTypeError,
     UnknownVariableError,
 )
 from resiris.parser import Parser
@@ -427,27 +427,27 @@ def test_string_concatenation_can_use_variables():
 
 
 def test_string_plus_int_is_rejected():
-    with pytest.raises(TypeErrorResiris):
+    with pytest.raises(ResirisTypeError):
         run('v x string = "value: " + 10\n')
 
 
 def test_string_plus_float_is_rejected():
-    with pytest.raises(TypeErrorResiris):
+    with pytest.raises(ResirisTypeError):
         run('v x string = "value: " + 2.5\n')
 
 
 def test_string_plus_bool_is_rejected():
-    with pytest.raises(TypeErrorResiris):
+    with pytest.raises(ResirisTypeError):
         run('v x string = "value: " + true\n')
 
 
 def test_string_subtraction_is_rejected():
-    with pytest.raises(TypeErrorResiris):
+    with pytest.raises(ResirisTypeError):
         run('v x string = "abc" - "a"\n')
 
 
 def test_string_multiplication_is_rejected():
-    with pytest.raises(TypeErrorResiris):
+    with pytest.raises(ResirisTypeError):
         run('v x string = "abc" * 2\n')
 
 
@@ -456,27 +456,27 @@ def test_string_multiplication_is_rejected():
 # ===========================================================================
 
 def test_bool_is_not_accepted_as_numeric_addition_operand():
-    with pytest.raises(TypeErrorResiris):
+    with pytest.raises(ResirisTypeError):
         run("v x int = true + 1\n")
 
 
 def test_bool_is_not_accepted_as_numeric_subtraction_operand():
-    with pytest.raises(TypeErrorResiris):
+    with pytest.raises(ResirisTypeError):
         run("v x int = true - 1\n")
 
 
 def test_bool_is_not_accepted_as_numeric_multiplication_operand():
-    with pytest.raises(TypeErrorResiris):
+    with pytest.raises(ResirisTypeError):
         run("v x int = true * 2\n")
 
 
 def test_bool_is_not_accepted_as_numeric_division_operand():
-    with pytest.raises(TypeErrorResiris):
+    with pytest.raises(ResirisTypeError):
         run("v x float = 10.0 / true\n")
 
 
 def test_bool_is_not_accepted_as_numeric_modulo_operand():
-    with pytest.raises(TypeErrorResiris):
+    with pytest.raises(ResirisTypeError):
         run("v x int = 10 % true\n")
 
 
@@ -570,7 +570,7 @@ def test_constant_can_be_used_in_comparison():
 # ===========================================================================
 
 def test_numeric_to_string_is_not_implicit_in_addition():
-    with pytest.raises(TypeErrorResiris):
+    with pytest.raises(ResirisTypeError):
         run('v x string = "x" + 5\n')
 
 

@@ -3,7 +3,7 @@ import pytest
 from resiris.interpreter import (
     Interpreter,
     RuntimeErrorResiris,
-    TypeErrorResiris,
+    ResirisTypeError,
 )
 from resiris.parser import Parser
 from resiris.tokenizer import Tokenizer
@@ -253,7 +253,7 @@ def test_function_can_contain_pass():
 
 
 def test_return_type_is_checked_by_receiving_declaration():
-    with pytest.raises(TypeErrorResiris):
+    with pytest.raises(ResirisTypeError):
         run(
             "fn get():\n"
             "\treturn 1.5\n"

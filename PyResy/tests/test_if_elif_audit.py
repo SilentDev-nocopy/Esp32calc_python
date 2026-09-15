@@ -1,6 +1,6 @@
 import pytest
 
-from resiris.interpreter import Interpreter, RuntimeErrorResiris, TypeErrorResiris
+from resiris.interpreter import Interpreter, RuntimeErrorResiris, ResirisTypeError
 from resiris.parser import Parser
 from resiris.tokenizer import Tokenizer
 
@@ -361,32 +361,32 @@ def test_if_bool_expression_from_comparison_can_be_stored_first():
 
 
 def test_if_rejects_int_condition():
-    with pytest.raises(TypeErrorResiris, match="if condition"):
+    with pytest.raises(ResirisTypeError, match="if condition"):
         run("if 1:\n\tpass\n")
 
 
 def test_if_rejects_float_condition():
-    with pytest.raises(TypeErrorResiris, match="if condition"):
+    with pytest.raises(ResirisTypeError, match="if condition"):
         run("if 1.0:\n\tpass\n")
 
 
 def test_if_rejects_string_condition():
-    with pytest.raises(TypeErrorResiris, match="if condition"):
+    with pytest.raises(ResirisTypeError, match="if condition"):
         run('if "true":\n\tpass\n')
 
 
 def test_elif_rejects_int_condition_when_reached():
-    with pytest.raises(TypeErrorResiris, match="elif condition"):
+    with pytest.raises(ResirisTypeError, match="elif condition"):
         run("if false:\n\tpass\nelif 1:\n\tpass\n")
 
 
 def test_elif_rejects_float_condition_when_reached():
-    with pytest.raises(TypeErrorResiris, match="elif condition"):
+    with pytest.raises(ResirisTypeError, match="elif condition"):
         run("if false:\n\tpass\nelif 1.0:\n\tpass\n")
 
 
 def test_elif_rejects_string_condition_when_reached():
-    with pytest.raises(TypeErrorResiris, match="elif condition"):
+    with pytest.raises(ResirisTypeError, match="elif condition"):
         run('if false:\n\tpass\nelif "x":\n\tpass\n')
 
 

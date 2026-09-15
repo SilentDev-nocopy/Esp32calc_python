@@ -43,7 +43,7 @@ class UnknownVariableError(RuntimeErrorResiris):
     pass
 
 
-class TypeErrorResiris(RuntimeErrorResiris):
+class ResirisTypeError(RuntimeErrorResiris):
     pass
 
 
@@ -181,7 +181,7 @@ class Interpreter:
                 "PROCESS(FPS) requires a global constant `c FPS float`"
             )
         if not variable.is_constant or variable.type_name != "float":
-            raise TypeErrorResiris(
+            raise ResirisTypeError(
                 "PROCESS(FPS) requires `FPS` to be a global float constant"
             )
         return variable.value
@@ -214,7 +214,7 @@ class Interpreter:
 
         fps = self._get_process_fps()
         if fps <= 0.0:
-            raise TypeErrorResiris("FPS must be greater than 0.0")
+            raise ResirisTypeError("FPS must be greater than 0.0")
 
         for _ in range(frame_count):
             self._execute_lifecycle(lifecycle, fps)
@@ -226,7 +226,7 @@ class Interpreter:
 
         fps = self._get_process_fps()
         if fps <= 0.0:
-            raise TypeErrorResiris("FPS must be greater than 0.0")
+            raise ResirisTypeError("FPS must be greater than 0.0")
 
         frame_period = 1.0 / fps
         next_frame = time.monotonic()
@@ -340,7 +340,7 @@ class Interpreter:
 
         if statement.type_name == "FunctionalObject":
             if not isinstance(statement.value, FunctionalObjectDef):
-                raise TypeErrorResiris(
+                raise ResirisTypeError(
                     f"{statement.name}: FunctionalObject.new(...) is required"
                 )
             value = FunctionalObject(statement.value.parameters, statement.value.body)
@@ -417,7 +417,7 @@ class Interpreter:
         condition = self.evaluate(statement.condition)
 
         if not isinstance(condition, bool):
-            raise TypeErrorResiris(
+            raise ResirisTypeError(
                 "the if condition must produce a bool value"
             )
 
@@ -429,7 +429,7 @@ class Interpreter:
             condition = self.evaluate(elif_condition)
 
             if not isinstance(condition, bool):
-                raise TypeErrorResiris(
+                raise ResirisTypeError(
                     "the elif condition must produce a bool value"
                 )
 
@@ -568,7 +568,7 @@ class Interpreter:
 
             if expression.operator == "+":
                 if not isinstance(value, (int, float)) or isinstance(value, bool):
-                    raise TypeErrorResiris(
+                    raise ResirisTypeError(
                         f"unary + can only be used with numbers: {value!r}"
                     )
 
@@ -576,7 +576,7 @@ class Interpreter:
 
             if expression.operator == "-":
                 if not isinstance(value, (int, float)) or isinstance(value, bool):
-                    raise TypeErrorResiris(
+                    raise ResirisTypeError(
                         f"unary - can only be used with numbers: {value!r}"
                     )
 
@@ -699,7 +699,7 @@ class Interpreter:
                 return left + right
 
             if not (left_is_number and right_is_number):
-                raise TypeErrorResiris(
+                raise ResirisTypeError(
                     f"+: strings of the same type or numeric operands are required; "
                     f"received: {type(left).__name__}, {type(right).__name__}"
                 )
@@ -708,7 +708,7 @@ class Interpreter:
 
         if operator in {"-", "*", "/", "%"}:
             if not (left_is_number and right_is_number):
-                raise TypeErrorResiris(
+                raise ResirisTypeError(
                     f"{operator}: numeric operands are required; "
                     f"received: {type(left).__name__}, "
                     f"{type(right).__name__}"
@@ -813,7 +813,7 @@ class Interpreter:
                 f'{source_type} cannot convert to bool. Error code:"ConversionFail"'
             )
 
-        raise TypeErrorResiris(
+        raise ResirisTypeError(
             f'{target_type} is an invalid type. Error code:"TypeError"'
         )
 
@@ -830,7 +830,7 @@ class Interpreter:
         if isinstance(value, str):
             return "string"
 
-        raise TypeErrorResiris(
+        raise ResirisTypeError(
             f"UnknownObject: type cannot be determined: "
             f"{type(value).__name__}"
         )
@@ -841,7 +841,7 @@ class Interpreter:
 
         if type_name == "int":
             if isinstance(value, bool) or not isinstance(value, int):
-                raise TypeErrorResiris(
+                raise ResirisTypeError(
                     f"{name}: an int value is required, "
                     f"received: {type(value).__name__}"
                 )
@@ -850,7 +850,7 @@ class Interpreter:
 
         if type_name == "float":
             if isinstance(value, bool) or not isinstance(value, (int, float)):
-                raise TypeErrorResiris(
+                raise ResirisTypeError(
                     f"{name}: a float value is required, "
                     f"received: {type(value).__name__}"
                 )
@@ -859,7 +859,7 @@ class Interpreter:
 
         if type_name == "string":
             if not isinstance(value, str):
-                raise TypeErrorResiris(
+                raise ResirisTypeError(
                     f"{name}: a string value is required, "
                     f"received: {type(value).__name__}"
                 )
@@ -868,7 +868,7 @@ class Interpreter:
 
         if type_name == "bool":
             if not isinstance(value, bool):
-                raise TypeErrorResiris(
+                raise ResirisTypeError(
                     f"{name}: a bool value is required, "
                     f"received: {type(value).__name__}"
                 )
@@ -877,13 +877,13 @@ class Interpreter:
 
         if type_name == "FunctionalObject":
             if not isinstance(value, FunctionalObject):
-                raise TypeErrorResiris(
+                raise ResirisTypeError(
                     f"{name}: a FunctionalObject value is required, received: {type(value).__name__}"
                 )
             return value
 
         if type_name == "ResirisModuleObject":
-            raise TypeErrorResiris(
+            raise ResirisTypeError(
                 f"{name}: ResirisModuleObject handling has not been implemented yet"
             )
 

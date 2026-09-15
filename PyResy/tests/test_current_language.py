@@ -32,7 +32,7 @@ from resiris.interpreter import (
     IntDivisionError,
     Interpreter,
     RuntimeErrorResiris,
-    TypeErrorResiris,
+    ResirisTypeError,
     UnknownVariableError,
 )
 from resiris.parser import Parser
@@ -524,12 +524,12 @@ def test_int_division_raises_int_division_error():
 
 
 def test_bool_requires_bool_result():
-    with pytest.raises(TypeErrorResiris):
+    with pytest.raises(ResirisTypeError):
         run("v x bool = 1\n")
 
 
 def test_string_requires_string_result():
-    with pytest.raises(TypeErrorResiris):
+    with pytest.raises(ResirisTypeError):
         run("v x string = 1\n")
 
 
@@ -587,7 +587,7 @@ def test_only_first_matching_if_elif_branch_runs():
 
 
 def test_if_requires_bool_condition():
-    with pytest.raises(TypeErrorResiris):
+    with pytest.raises(ResirisTypeError):
         run(
             "if 1:\n"
             "\tpass\n"
@@ -595,7 +595,7 @@ def test_if_requires_bool_condition():
 
 
 def test_elif_requires_bool_condition():
-    with pytest.raises(TypeErrorResiris):
+    with pytest.raises(ResirisTypeError):
         run(
             "if false:\n"
             "\tpass\n"
