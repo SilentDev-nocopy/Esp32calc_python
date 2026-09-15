@@ -13,6 +13,12 @@ mkdir -p "$BIN" "$MIME" "$ICONS" "$BASH_COMPLETION" "$ZSH_COMPLETION"
 
 ln -sfn "$ROOT/bin/resiris" "$BIN/resiris"
 
+# Verify that the installed CLI points to this exact project copy.
+if [[ "$(readlink -f "$BIN/resiris")" != "$(readlink -f "$ROOT/bin/resiris")" ]]; then
+    echo "ERROR: Resiris CLI installation points to the wrong executable." >&2
+    exit 1
+fi
+
 # Install shell completion for Resiris CLI arguments and .resy files.
 if [[ -f "$ROOT/pre_packaging/shell/resiris.bash" ]]; then
     cp "$ROOT/pre_packaging/shell/resiris.bash" "$BASH_COMPLETION/resiris"
@@ -70,7 +76,7 @@ if command -v xdg-mime >/dev/null 2>&1; then
     fi
 fi
 
-VSIX="$ROOT/pre_packaging/vscode/build/resiris-language-support-0.2.0.vsix"
+VSIX="$ROOT/pre_packaging/vscode/build/resiris-language-support-0.2.1.vsix"
 
 # The terminal installer does NOT install the VS Code extension automatically.
 # If a VS Code-compatible CLI is available, explicitly ask the user first.

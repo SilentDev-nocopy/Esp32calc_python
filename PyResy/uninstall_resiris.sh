@@ -24,5 +24,19 @@ rm -f "$HOME/.local/share/applications/resiris.desktop"
 command -v update-mime-database >/dev/null 2>&1 && \
     update-mime-database "$HOME/.local/share/mime" >/dev/null 2>&1 || true
 
+# Remove the Resiris VS Code extension if a VS Code-compatible CLI is available.
+CODE_CMD=""
+for cmd in code code-insiders codium; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+        CODE_CMD="$cmd"
+        break
+    fi
+done
+
+if [[ -n "$CODE_CMD" ]]; then
+    "$CODE_CMD" --uninstall-extension resiris.resiris-language-support >/dev/null 2>&1 || true
+    echo "Removed Resiris VS Code extension."
+fi
+
 echo "Removed Resiris Linux file integration."
 echo "Your project files and .resy programs were NOT deleted."
