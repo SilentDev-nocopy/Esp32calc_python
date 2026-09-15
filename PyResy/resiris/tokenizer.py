@@ -79,8 +79,8 @@ KEYWORDS = {
     "v": TokenType.V,
     "c": TokenType.C,
     "fn": TokenType.FN,
-    "start": TokenType.START,
-    "process": TokenType.PROCESS,
+    "START": TokenType.START,
+    "PROCESS": TokenType.PROCESS,
     "await": TokenType.AWAIT,
     "if": TokenType.IF,
     "elif": TokenType.ELIF,
@@ -128,7 +128,7 @@ class Tokenizer:
       - ## comments
       - indentation blocks
       - v/c declarations
-      - fn / start / process
+      - fn / START / PROCESS
       - if / elif / else
       - return / pass / await / print_cmd
       - arithmetic/comparison/assignment operators

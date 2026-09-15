@@ -20,7 +20,7 @@ else:
 fn add(a, b):
 	return a + b
 
-start():
+START():
 	add(number, 3)
 """
 

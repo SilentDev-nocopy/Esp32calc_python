@@ -21,7 +21,7 @@ def test_function_without_parameters():
     env = run(
         "fn answer():\n"
         "\tv x int = 42\n"
-        "start():\n"
+        "START():\n"
         "\tanswer()\n"
     )
     assert "x" not in env
@@ -597,30 +597,30 @@ def test_function_error_from_nested_call_propagates():
 
 
 def test_start_function_body_can_contain_function_call():
-    from resiris.ast_nodes import FunctionDef, ExpressionStmt, CallExpr
+    from resiris.ast_nodes import LifecycleDef, ExpressionStmt, CallExpr
     program = parse(
         "fn calculate():\n"
         "\treturn 42\n"
-        "start():\n"
+        "START():\n"
         "\tcalculate()\n"
     )
     start = next(statement for statement in program.statements
-                 if isinstance(statement, FunctionDef) and statement.name == "start")
+                 if isinstance(statement, LifecycleDef) and statement.name == "START")
     assert isinstance(start.body[0], ExpressionStmt)
     assert isinstance(start.body[0].expression, CallExpr)
     assert start.body[0].expression.function.name == "calculate"
 
 
 def test_process_function_body_can_contain_function_call():
-    from resiris.ast_nodes import FunctionDef, ExpressionStmt, CallExpr
+    from resiris.ast_nodes import LifecycleDef, ExpressionStmt, CallExpr
     program = parse(
         "fn calculate():\n"
         "\treturn 42\n"
-        "process(delta):\n"
+        "PROCESS(FPS):\n"
         "\tcalculate()\n"
     )
     process = next(statement for statement in program.statements
-                   if isinstance(statement, FunctionDef) and statement.name == "process")
+                   if isinstance(statement, LifecycleDef) and statement.name == "PROCESS")
     assert isinstance(process.body[0], ExpressionStmt)
     assert isinstance(process.body[0].expression, CallExpr)
     assert process.body[0].expression.function.name == "calculate"

@@ -99,25 +99,27 @@ Global varints can be read from a function.
 
 ---
 
-## 7. `start()`
+## 7. `START()`
 
-`start()` is the program entry point.
+`START()` is the program entry point and runs once when the program starts.
 
 ```resy
-fn start():
+START():
 	print_cmd("Program started")
 ```
 
 ---
 
-## 8. `process(delta)`
+## 8. `PROCESS(FPS)`
 
-`process(delta)` is a repeating function.
+`PROCESS(FPS)` is the repeating lifecycle function. `FPS` is a float argument supplied by the runtime.
 
 ```resy
-fn process(delta):
+PROCESS(FPS):
 	print_cmd("Processing")
 ```
+
+`FPS` is supplied by the runtime as a `float`. The program defines the frame rate with a global constant, for example `c FPS float = 30.0`. The runtime uses that value to schedule the repeated `PROCESS(FPS)` calls; the program does not calculate `delta`.
 
 ---
 
@@ -452,7 +454,7 @@ fn calculate():
 	else:
 		print_cmd("limit not reached")
 
-start()
+START()
 ```
 
 ---
@@ -497,9 +499,9 @@ Blocks use TAB indentation.
 
 `fn` defines a function.
 
-`start()` is the program entry point.
+`START()` is the program entry point and runs once when the program starts.
 
-`process(delta)` is a repeating function.
+`PROCESS(FPS)` is the repeating lifecycle function. `FPS` is a float argument supplied by the runtime.
 
 `mat` is a control-flow statement.
 

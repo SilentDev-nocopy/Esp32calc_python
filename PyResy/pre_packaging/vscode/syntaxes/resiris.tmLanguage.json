@@ -61,7 +61,7 @@
       "patterns": [
         {
           "name": "entity.name.function.lifecycle.resiris",
-          "match": "\\b(?:start|process)(?=\\s*\\()"
+          "match": "\\b(?:START|PROCESS)(?=\\s*\\()"
         }
       ]
     },

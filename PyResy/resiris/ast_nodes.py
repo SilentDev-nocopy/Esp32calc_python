@@ -30,6 +30,13 @@ class FunctionDef:
 
 
 @dataclass
+class LifecycleDef:
+    name: str
+    parameters: list[tuple[str, str]]
+    body: list[object]
+
+
+@dataclass
 class IfStmt:
     condition: object
     body: list[object]

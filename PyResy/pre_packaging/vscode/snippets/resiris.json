@@ -1,16 +1,16 @@
 {
-  "Resiris start": {
-    "prefix": "start",
+  "Resiris START": {
+    "prefix": "START",
     "body": [
-      "start():",
+      "START():",
       "\t$0"
     ],
     "description": "Resiris lifecycle entry point"
   },
-  "Resiris process": {
-    "prefix": "process",
+  "Resiris PROCESS": {
+    "prefix": "PROCESS",
     "body": [
-      "process(delta):",
+      "PROCESS(FPS):",
       "\t$0"
     ],
     "description": "Resiris repeated lifecycle function"

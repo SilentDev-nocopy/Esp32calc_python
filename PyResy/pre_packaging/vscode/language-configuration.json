@@ -24,7 +24,7 @@
   },
   "onEnterRules": [
     {
-      "beforeText": "^\\s*(?:start|process|fn)\\b.*:\\s*(?:##.*)?$",
+      "beforeText": "^\\s*(?:START|PROCESS|fn)\\b.*:\\s*(?:##.*)?$",
       "action": {
         "indent": "indent"
       }

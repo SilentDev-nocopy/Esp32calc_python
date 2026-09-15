@@ -1,15 +1,16 @@
 <include> RSMath
 
+c FPS float = 1.0
 v negativ_szam int = -1
 
 v asd string = RSMath[FUNCTIONS]
 pass rint_cmd(asd)
-print_cmd(negativ_szam)
+##print_cmd(negativ_szam)
 
 ## variansdadasasa
 
-##fn start():
+##START():
 ##	print_cmd("Program started")
 
-fn process(delta):
-	print_cmd(delta)
+PROCESS(FPS):
+	print_cmd(FPS)

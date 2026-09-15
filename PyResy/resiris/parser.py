@@ -8,7 +8,7 @@ from .ast_nodes import (
     Program, Include, Declaration, FunctionDef, IfStmt, ReturnStmt, PassStmt,
     AwaitStmt, PrintCmdStmt, Assignment, ExpressionStmt, Literal, Name, UnaryExpr,
     BinaryExpr, CallExpr, FunctionalObjectDef, TypeConversionExpr,
-    MatStmt, MatCase, ModuleAccessExpr, ModuleConstantAccessExpr,
+    MatStmt, MatCase, ModuleAccessExpr, ModuleConstantAccessExpr, LifecycleDef,
 )
 
 
@@ -108,7 +108,7 @@ class Parser:
         if token.type is TokenType.FN:
             return self.parse_function()
         if token.type in (TokenType.START, TokenType.PROCESS):
-            return self.parse_named_function()
+            return self.parse_lifecycle()
         if token.type is TokenType.IF:
             return self.parse_if()
         if token.type is TokenType.MAT:
@@ -219,6 +219,32 @@ class Parser:
         self.expect(TokenType.NEWLINE, "a line ending is required after `:`")
         body = self.parse_block()
         return FunctionDef(name_token.value, parameters, body)
+
+    def parse_lifecycle(self) -> LifecycleDef:
+        name_token = self.advance()
+        self.expect(TokenType.LPAREN, "`(` is required after the lifecycle name")
+
+        parameters: list[tuple[str, str]] = []
+        if name_token.type is TokenType.START:
+            if not self.at(TokenType.RPAREN):
+                self.error(self.current(), "`START` does not accept parameters")
+        else:
+            if self.at(TokenType.RPAREN):
+                self.error(self.current(), "`PROCESS` requires the `FPS` parameter")
+
+            parameter = self.expect(TokenType.IDENTIFIER, "`FPS` is required as the `PROCESS` parameter")
+            if parameter.value != "FPS":
+                self.error(parameter, "the `PROCESS` parameter must be named `FPS`")
+
+            # `FPS` has the built-in float type by definition; its type is
+            # not written in the lifecycle header.
+            parameters.append(("FPS", "float"))
+
+        self.expect(TokenType.RPAREN, "missing `)` in the lifecycle parameter list")
+        self.expect(TokenType.COLON, "the lifecycle header must end with `:`")
+        self.expect(TokenType.NEWLINE, "a line ending is required after `:`")
+        body = self.parse_block()
+        return LifecycleDef(name_token.value, parameters, body)
 
     def parse_parameter_list(self) -> list[str]:
         self.expect(TokenType.LPAREN, "`(` is required after the function name")
@@ -609,14 +635,6 @@ class Parser:
         if token.type is TokenType.IDENTIFIER:
             self.advance()
             return Name(token.value)
-
-        if token.type is TokenType.START:
-            self.advance()
-            return Name("start")
-
-        if token.type is TokenType.PROCESS:
-            self.advance()
-            return Name("process")
 
         if token.type in self.TYPE_TOKENS:
             self.error(

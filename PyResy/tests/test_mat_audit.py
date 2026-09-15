@@ -466,9 +466,9 @@ test()
     assert capsys.readouterr().out == "matched\n"
 
 
-def test_mat_is_parsed_inside_start():
+def test_mat_is_parsed_inside_START():
     program = parse("""\
-start():
+START():
 	v x int = 5
 	mat x:
 		5:
@@ -478,7 +478,7 @@ start():
 
 def test_mat_is_parsed_inside_process():
     program = parse("""\
-process(delta):
+PROCESS(FPS):
 	v x int = 5
 	mat x:
 		5:

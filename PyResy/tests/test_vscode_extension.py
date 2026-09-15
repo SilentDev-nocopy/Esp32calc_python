@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 VSCODE = ROOT / "pre_packaging" / "vscode"
-VSIX = VSCODE / "build" / "resiris-language-support-0.2.0.vsix"
+VSIX = VSCODE / "build" / "resiris-language-support-0.2.1.vsix"
 
 
 def test_extension_manifest_declares_resy_language_and_icon_theme():
@@ -46,7 +46,7 @@ def test_grammar_contains_current_resiris_keywords_and_lifecycle():
     )
     text = json.dumps(grammar)
 
-    for word in ("v", "c", "fn", "start", "process", "await", "if", "elif", "else", "mat", "return", "pass"):
+    for word in ("v", "c", "fn", "START", "PROCESS", "await", "if", "elif", "else", "mat", "return", "pass"):
         assert word in text
 
     assert "##.*$" in text
@@ -59,8 +59,8 @@ def test_snippets_use_tab_indentation():
         (VSCODE / "snippets" / "resiris.json").read_text(encoding="utf-8")
     )
 
-    assert snippets["Resiris start"]["body"][1].startswith("\t")
-    assert snippets["Resiris process"]["body"][1].startswith("\t")
+    assert snippets["Resiris START"]["body"][1].startswith("\t")
+    assert snippets["Resiris PROCESS"]["body"][1].startswith("\t")
     assert snippets["Resiris function"]["body"][1].startswith("\t")
 
 
