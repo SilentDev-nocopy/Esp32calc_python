@@ -1,12 +1,3 @@
-## ============================================
-## RESIRIS MAT - FULL END-TO-END TEST
-## ============================================
-
-
-## --------------------------------------------
-## 1. INT MATCH - EVERY CASE
-## --------------------------------------------
-
 v int_one int = 1
 v int_two int = 2
 v int_three int = 3
@@ -35,11 +26,6 @@ mat int_three:
 	3:
 		print_cmd("TEST 03: int case 3 PASS")
 
-
-## --------------------------------------------
-## 2. INT ELSE
-## --------------------------------------------
-
 v int_else int = 99
 
 mat int_else:
@@ -49,11 +35,6 @@ mat int_else:
 		print_cmd("TEST 04: FAIL")
 	else:
 		print_cmd("TEST 04: int else PASS")
-
-
-## --------------------------------------------
-## 3. INT - NO MATCH, NO ELSE
-## --------------------------------------------
 
 print_cmd("TEST 05: before no-match")
 
@@ -66,11 +47,6 @@ mat int_no_match:
 		print_cmd("TEST 05: FAIL")
 
 print_cmd("TEST 05: after no-match PASS")
-
-
-## --------------------------------------------
-## 4. FLOAT MATCH
-## --------------------------------------------
 
 v float_one float = 1.5
 v float_two float = 2.5
@@ -100,11 +76,6 @@ mat float_three:
 	3.5:
 		print_cmd("TEST 08: float 3.5 PASS")
 
-
-## --------------------------------------------
-## 5. FLOAT ELSE
-## --------------------------------------------
-
 v float_else float = 99.5
 
 mat float_else:
@@ -112,11 +83,6 @@ mat float_else:
 		print_cmd("TEST 09: FAIL")
 	else:
 		print_cmd("TEST 09: float else PASS")
-
-
-## --------------------------------------------
-## 6. STRING MATCH
-## --------------------------------------------
 
 v text_one string = "one"
 v text_two string = "two"
@@ -146,11 +112,6 @@ mat text_three:
 	"three":
 		print_cmd("TEST 12: string three PASS")
 
-
-## --------------------------------------------
-## 7. STRING ELSE
-## --------------------------------------------
-
 v text_else string = "unknown"
 
 mat text_else:
@@ -161,11 +122,6 @@ mat text_else:
 	else:
 		print_cmd("TEST 13: string else PASS")
 
-
-## --------------------------------------------
-## 8. BOOL TRUE
-## --------------------------------------------
-
 v bool_true bool = true
 
 mat bool_true:
@@ -173,11 +129,6 @@ mat bool_true:
 		print_cmd("TEST 14: bool true PASS")
 	false:
 		print_cmd("TEST 14: bool false FAIL")
-
-
-## --------------------------------------------
-## 9. BOOL FALSE
-## --------------------------------------------
 
 v bool_false bool = false
 
@@ -187,11 +138,6 @@ mat bool_false:
 	false:
 		print_cmd("TEST 15: bool false PASS")
 
-
-## --------------------------------------------
-## 10. BOOL ELSE
-## --------------------------------------------
-
 v bool_else bool = true
 
 mat bool_else:
@@ -199,11 +145,6 @@ mat bool_else:
 		print_cmd("TEST 16: bool false FAIL")
 	else:
 		print_cmd("TEST 16: bool else PASS")
-
-
-## --------------------------------------------
-## 11. EXACT TYPE MATCHING
-## --------------------------------------------
 
 v exact_int int = 10
 v exact_float float = 10.0
@@ -220,11 +161,6 @@ mat exact_float:
 	else:
 		print_cmd("TEST 18: exact float FAIL")
 
-
-## --------------------------------------------
-## 12. WRONG TYPE IS SKIPPED
-## --------------------------------------------
-
 v wrong_type_value float = 10.0
 
 mat wrong_type_value:
@@ -232,11 +168,6 @@ mat wrong_type_value:
 		print_cmd("TEST 19: WRONG TYPE FAIL")
 	else:
 		print_cmd("TEST 19: wrong type skipped PASS")
-
-
-## --------------------------------------------
-## 13. TYPE() MATCHING - INT
-## --------------------------------------------
 
 v type_int_value int = 123
 
@@ -246,11 +177,6 @@ mat type_int_value.type():
 	float:
 		print_cmd("TEST 20: type float FAIL")
 
-
-## --------------------------------------------
-## 14. TYPE() MATCHING - FLOAT
-## --------------------------------------------
-
 v type_float_value float = 123.5
 
 mat type_float_value.type():
@@ -258,11 +184,6 @@ mat type_float_value.type():
 		print_cmd("TEST 21: type int FAIL")
 	float:
 		print_cmd("TEST 21: type float PASS")
-
-
-## --------------------------------------------
-## 15. TYPE() MATCHING - STRING
-## --------------------------------------------
 
 v type_string_value string = "hello"
 
@@ -272,11 +193,6 @@ mat type_string_value.type():
 	bool:
 		print_cmd("TEST 22: type bool FAIL")
 
-
-## --------------------------------------------
-## 16. TYPE() MATCHING - BOOL
-## --------------------------------------------
-
 v type_bool_value bool = true
 
 mat type_bool_value.type():
@@ -284,11 +200,6 @@ mat type_bool_value.type():
 		print_cmd("TEST 23: type bool PASS")
 	string:
 		print_cmd("TEST 23: type string FAIL")
-
-
-## --------------------------------------------
-## 17. STRING() RESULT
-## --------------------------------------------
 
 v string_result_value int = 42
 
@@ -300,11 +211,6 @@ mat string_result_value.string():
 	else:
 		print_cmd("TEST 24: string() else FAIL")
 
-
-## --------------------------------------------
-## 18. MULTIPLE STATEMENTS IN CASE
-## --------------------------------------------
-
 v multi_body int = 7
 
 mat multi_body:
@@ -314,11 +220,6 @@ mat multi_body:
 		print_cmd("TEST 25: body line 3 PASS")
 	else:
 		print_cmd("TEST 25: FAIL")
-
-
-## --------------------------------------------
-## 19. NO FALL-THROUGH
-## --------------------------------------------
 
 v no_fallthrough int = 2
 
@@ -330,11 +231,6 @@ mat no_fallthrough:
 	3:
 		print_cmd("TEST 26: case 3 FAIL")
 
-
-## --------------------------------------------
-## 20. CODE AFTER MAT
-## --------------------------------------------
-
 v after_mat int = 5
 
 mat after_mat:
@@ -342,11 +238,6 @@ mat after_mat:
 		print_cmd("TEST 27: matched branch PASS")
 
 print_cmd("TEST 27: after mat PASS")
-
-
-## --------------------------------------------
-## 21. MAT INSIDE FUNCTION
-## --------------------------------------------
 
 fn function_mat():
 	v function_value int = 2
@@ -361,13 +252,7 @@ fn function_mat():
 
 	print_cmd("TEST 28: function after mat PASS")
 
-
 function_mat()
-
-
-## --------------------------------------------
-## 22. MAT INSIDE IF
-## --------------------------------------------
 
 v if_value bool = true
 
@@ -383,11 +268,6 @@ if if_value:
 			print_cmd("TEST 29: if/mat case 3 PASS")
 		else:
 			print_cmd("TEST 29: if/mat else FAIL")
-
-
-## --------------------------------------------
-## 23. RETURN FROM MATCH CASE
-## --------------------------------------------
 
 fn return_mat():
 	v return_value int = 10
@@ -406,11 +286,6 @@ mat return_result:
 	else:
 		print_cmd("TEST 30: return from mat FAIL")
 
-
-## --------------------------------------------
-## 24. PASS INSIDE MATCH CASE
-## --------------------------------------------
-
 v pass_value int = 1
 
 mat pass_value:
@@ -420,11 +295,6 @@ mat pass_value:
 	else:
 		print_cmd("TEST 31: FAIL")
 
-
-## --------------------------------------------
-## 25. CONSTANT AS MAT VALUE
-## --------------------------------------------
-
 c constant_value int = 55
 
 mat constant_value:
@@ -432,11 +302,6 @@ mat constant_value:
 		print_cmd("TEST 32: constant match PASS")
 	else:
 		print_cmd("TEST 32: constant match FAIL")
-
-
-## --------------------------------------------
-## 26. CONSTANT STRING
-## --------------------------------------------
 
 c constant_text string = "constant"
 
@@ -446,11 +311,6 @@ mat constant_text:
 	else:
 		print_cmd("TEST 33: constant string FAIL")
 
-
-## --------------------------------------------
-## 27. TYPE() ON CONSTANT
-## --------------------------------------------
-
 c constant_type_value float = 5.5
 
 mat constant_type_value.type():
@@ -459,11 +319,6 @@ mat constant_type_value.type():
 	else:
 		print_cmd("TEST 34: constant type FAIL")
 
-
-## --------------------------------------------
-## 28. STRING() ON CONSTANT
-## --------------------------------------------
-
 c constant_string_value int = 777
 
 mat constant_string_value.string():
@@ -471,11 +326,6 @@ mat constant_string_value.string():
 		print_cmd("TEST 35: constant string() PASS")
 	else:
 		print_cmd("TEST 35: constant string() FAIL")
-
-
-## --------------------------------------------
-## 29. CASE ORDER DOES NOT MATTER
-## --------------------------------------------
 
 v order_value int = 30
 
@@ -487,11 +337,6 @@ mat order_value:
 	20:
 		print_cmd("TEST 36: order 20 FAIL")
 
-
-## --------------------------------------------
-## 30. ELSE IS LAST
-## --------------------------------------------
-
 v last_else_value int = 500
 
 mat last_else_value:
@@ -501,11 +346,6 @@ mat last_else_value:
 		print_cmd("TEST 37: FAIL")
 	else:
 		print_cmd("TEST 37: last else PASS")
-
-
-## --------------------------------------------
-## 31. MULTIPLE DIFFERENT VALUES
-## --------------------------------------------
 
 v value_a int = 1
 v value_b int = 2
@@ -572,11 +412,6 @@ mat value_e:
 		print_cmd("TEST 38E: FAIL")
 	5:
 		print_cmd("TEST 38E: PASS")
-
-
-## --------------------------------------------
-## FINAL
-## --------------------------------------------
 
 print_cmd("================================")
 print_cmd("MAT END-TO-END TEST FINISHED")

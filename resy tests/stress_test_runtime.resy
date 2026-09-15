@@ -72,11 +72,11 @@ print_cmd(constant_bool)
 print_cmd(constant_string)
 v a int = 25
 v b float = a.type(float)
-v c string = a.type(string)
+v s string = a.type(string)
 v d bool = a.type(bool)
 print_cmd(a)
 print_cmd(b)
-print_cmd(c)
+print_cmd(s)
 print_cmd(d)
 v negative_a int = -1
 v negative_b float = -0.5
@@ -109,7 +109,7 @@ print_cmd(r8.type(int))
 print_cmd(r9.type(int))
 print_cmd(r10.type(int))
 v expression_int int = 5 + 5
-v expression_float float = 10 / 4
+v expression_float float = 10.0 / 4
 print_cmd(expression_int)
 print_cmd(expression_float)
 print_cmd(expression_int.type(float))
