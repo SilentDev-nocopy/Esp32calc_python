@@ -2,7 +2,7 @@
   "name": "resiris-language-support",
   "displayName": "Resiris Language Support",
   "description": "Language support and Seti file icons for the Resiris programming language.",
-  "version": "0.2.1",
+  "version": "0.3.1",
   "publisher": "resiris",
   "license": "MIT",
   "icon": "icons/resy.png",
@@ -41,6 +41,18 @@
         "id": "resiris-seti",
         "label": "Resiris Seti",
         "path": "./icons/resiris-seti-icon-theme.json"
+      }
+    ],
+    "themes": [
+      {
+        "label": "Resiris Default",
+        "uiTheme": "vs-dark",
+        "path": "./themes/resiris-color-theme.json"
+      },
+      {
+        "label": "Resiris Nord",
+        "uiTheme": "vs-dark",
+        "path": "./themes/resiris-nord-theme.json"
       }
     ],
     "configurationDefaults": {

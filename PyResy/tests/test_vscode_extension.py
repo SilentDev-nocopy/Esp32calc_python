@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 VSCODE = ROOT / "pre_packaging" / "vscode"
-VSIX = VSCODE / "build" / "resiris-language-support-0.2.1.vsix"
+VSIX = VSCODE / "build" / "resiris-language-support-0.3.1.vsix"
 
 
 def test_extension_manifest_declares_resy_language_and_icon_theme():
@@ -26,6 +26,11 @@ def test_extension_manifest_declares_resy_language_and_icon_theme():
 
     themes = package["contributes"]["iconThemes"]
     assert any(item["id"] == "resiris-seti" for item in themes)
+
+    color_themes = package["contributes"]["themes"]
+    labels = {item["label"] for item in color_themes}
+    assert "Resiris Default" in labels
+    assert "Resiris Nord" in labels
 
 
 def test_language_configuration_forces_tabs():
@@ -64,6 +69,42 @@ def test_snippets_use_tab_indentation():
     assert snippets["Resiris function"]["body"][1].startswith("\t")
 
 
+def test_theme_gives_every_resiris_scope_its_own_color():
+    grammar = json.loads(
+        (VSCODE / "syntaxes" / "resiris.tmLanguage.json").read_text(encoding="utf-8")
+    )
+
+    def collect_names(node):
+        names = set()
+        if isinstance(node, dict):
+            if isinstance(node.get("name"), str):
+                names.add(node["name"])
+            for value in node.values():
+                names |= collect_names(value)
+        elif isinstance(node, list):
+            for item in node:
+                names |= collect_names(item)
+        return names
+
+    scopes = {s for s in collect_names(grammar) if s.endswith(".resiris")}
+
+    for theme_path in sorted((VSCODE / "themes").glob("*.json")):
+        theme = json.loads(theme_path.read_text(encoding="utf-8"))
+
+        colored = {}
+        for rule in theme["tokenColors"]:
+            scope = rule.get("scope")
+            if not scope or not str(scope).endswith(".resiris"):
+                continue
+            colored[str(scope)] = rule["settings"]["foreground"]
+
+        missing = sorted(scopes - set(colored))
+        assert not missing, f"{theme_path.name} missing colors for: {missing}"
+        assert len(set(colored.values())) == len(colored), (
+            f"{theme_path.name} has duplicate colors among resiris scopes"
+        )
+
+
 def test_built_vsix_contains_language_support_files():
     assert VSIX.is_file()
 
@@ -78,5 +119,7 @@ def test_built_vsix_contains_language_support_files():
         "extension/icons/resiris-seti-icon-theme.json",
         "extension/icons/resy.png",
         "extension/icons/seti.woff",
+        "extension/themes/resiris-color-theme.json",
+        "extension/themes/resiris-nord-theme.json",
     }
     assert expected <= names
