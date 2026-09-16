@@ -6,10 +6,10 @@ from typing import Optional
 from .tokenizer import Token, TokenType, ResirisSyntaxError
 from .ast_nodes import (
     Program, Include, Declaration, FunctionDef, IfStmt, ReturnStmt, PassStmt,
-    AwaitStmt, PrintCmdStmt, Assignment, ExpressionStmt, Literal, Name, UnaryExpr,
-    BinaryExpr, CallExpr, FunctionalObjectDef, TypeConversionExpr,
+    PassStmt, PrintCmdStmt, Assignment, ExpressionStmt, Literal,
+    Name, UnaryExpr, BinaryExpr, CallExpr, FunctionalObjectDef, TypeConversionExpr,
     MatStmt, MatCase, ModuleAccessExpr, ModuleConstantAccessExpr,
-    LifecycleDef,
+    ModuleConstantAccessExpr, LifecycleDef,
 )
 
 
@@ -71,7 +71,7 @@ class Parser:
 
     def error(self, token: Token, message: str) -> None:
         raise ResirisSyntaxError(
-            f"{token.line}:{token.column}: {message}; got: "
+            f"line {token.line}, column {token.column}: {message}; got: "
             f"{token.type.name} ({token.value!r})"
         )
 

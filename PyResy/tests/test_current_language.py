@@ -283,6 +283,43 @@ def test_process_frames_runs_requested_number_of_times():
     assert interpreter.variables["count"].value == 3
 
 
+def test_duplicate_start_is_rejected():
+    source = (
+        "START():\n"
+        "\tpass\n"
+        "START():\n"
+        "\tpass\n"
+    )
+    with pytest.raises(FunctionError, match="START: the lifecycle already exists"):
+        Interpreter().run(parse(source))
+
+
+def test_duplicate_process_is_rejected():
+    source = (
+        "c FPS float = 30.0\n"
+        "PROCESS(FPS):\n"
+        "\tpass\n"
+        "PROCESS(FPS):\n"
+        "\tpass\n"
+    )
+    with pytest.raises(FunctionError, match="PROCESS: the lifecycle already exists"):
+        Interpreter().run(parse(source))
+
+
+def test_start_and_process_can_coexist():
+    source = (
+        "c FPS float = 30.0\n"
+        "START():\n"
+        "\tpass\n"
+        "PROCESS(FPS):\n"
+        "\tpass\n"
+    )
+    interpreter = Interpreter()
+    interpreter.run(parse(source))
+    assert interpreter.start_lifecycle is not None
+    assert interpreter.process_lifecycle is not None
+
+
 def test_process_requires_global_float_fps_constant():
     with pytest.raises(RuntimeErrorResiris):
         interpreter = Interpreter()

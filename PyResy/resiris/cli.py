@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import re
 from pathlib import Path
 
 from .interpreter import Interpreter, RuntimeErrorResiris
@@ -16,9 +17,32 @@ BLUE = "\033[34m"
 RESET = "\033[0m"
 
 
+def _project_version() -> str:
+    """Read the version from pyproject.toml, the single source of truth."""
+    pyproject = Path(__file__).resolve().parent.parent / "pyproject.toml"
+    try:
+        text = pyproject.read_text(encoding="utf-8")
+    except OSError:
+        return "unknown"
+    try:
+        import tomllib
+
+        version = tomllib.loads(text).get("project", {}).get("version")
+        if isinstance(version, str):
+            return version
+    except (ImportError, ValueError, TypeError):
+        pass
+    match = re.search(
+        r"^version\s*=\s*[\"']([^\"']+)[\"']", text, re.MULTILINE
+    )
+    if match:
+        return match.group(1)
+    return "unknown"
+
+
 # Resiris CLI banner
 
-VERSION = "1.8"
+VERSION = _project_version()
 
 BANNER = f"""{RED}
 ██████╗ ███████╗███████╗██╗██████╗ ██╗███████╗

@@ -46,17 +46,7 @@ class IfStmt:
 
 @dataclass
 class ReturnStmt:
-    value: Optional[object] = None
-
-
-@dataclass
-class PassStmt:
-    pass
-
-
-@dataclass
-class AwaitStmt:
-    expression: object
+    value: object | None = None
 
 
 @dataclass

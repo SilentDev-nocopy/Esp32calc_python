@@ -24,7 +24,6 @@ class TokenType(Enum):
     FN = auto()
     START = auto()
     PROCESS = auto()
-    AWAIT = auto()
     IF = auto()
     ELIF = auto()
     ELSE = auto()
@@ -81,7 +80,6 @@ KEYWORDS = {
     "fn": TokenType.FN,
     "START": TokenType.START,
     "PROCESS": TokenType.PROCESS,
-    "await": TokenType.AWAIT,
     "if": TokenType.IF,
     "elif": TokenType.ELIF,
     "else": TokenType.ELSE,
@@ -126,17 +124,16 @@ class Tokenizer:
 
     Current syntax implemented here:
       - ## comments
-      - indentation blocks
-      - v/c declarations
-      - fn / START / PROCESS
+      - indentation blocks (tabs)
+      - v / c declarations
+      - fn / START / PROCESS / FunctionalObject / include
       - if / elif / else
-      - return / pass / await / print_cmd
+      - return / pass / mat / print_cmd / print_cmd
       - arithmetic/comparison/assignment operators
-      - int/float/string/bool/UnknownObject/ResirisModuleObject
+      - int / float / string / bool / UnknownObject / ResirisModuleObject
       - strings in single or double quotes
 
-    `mat` is tokenized, but its case grammar is intentionally not parsed yet,
-    because the current specification does not define the case syntax.
+    `await` is a planned future feature and is not part of the current syntax.
     """
 
     TWO_CHAR = {
@@ -179,7 +176,7 @@ class Tokenizer:
             leading = raw_line[: len(raw_line) - len(raw_line.lstrip(" \t"))]
             if " " in leading:
                 raise ResirisSyntaxError(
-                    f"{line_no}: spaces cannot be used for indentation; use tabs"
+                    f"line {line_no}: spaces cannot be used for indentation; use tabs"
                 )
 
             stripped = raw_line.lstrip("\t")
@@ -198,7 +195,7 @@ class Tokenizer:
                     tokens.append(Token(TokenType.DEDENT, indent, line_no, 1))
                 if indent != indent_stack[-1]:
                     raise ResirisSyntaxError(
-                        f"{line_no}: invalid indentation"
+                        f"line {line_no}: invalid indentation"
                     )
 
             i = indent
@@ -238,7 +235,7 @@ class Tokenizer:
                         if raw_line[i] == "\\":
                             if i + 1 >= n:
                                 raise ResirisSyntaxError(
-                                    f"{line_no}:{i+1}: unterminated string"
+                                    f"line {line_no}, column {i+1}: unterminated string"
                                 )
                             escaped = raw_line[i + 1]
                             escapes = {
@@ -260,7 +257,7 @@ class Tokenizer:
                         i += 1
                     else:
                         raise ResirisSyntaxError(
-                            f"{line_no}:{start+1}: unterminated string"
+                            f"line {line_no}, column {start+1}: unterminated string"
                         )
 
                     tokens.append(
@@ -285,7 +282,8 @@ class Tokenizer:
                             value = float(raw_line[start:i])
                         else:
                             raise ResirisSyntaxError(
-                                f"{line_no}:{i+1}: a digit is required after the decimal point"
+                                f"line {line_no}, column {i+1}: "
+                                "a digit is required after the decimal point"
                             )
 
                     tokens.append(Token(token_type, value, line_no, start + 1))
@@ -303,7 +301,7 @@ class Tokenizer:
                     continue
 
                 raise ResirisSyntaxError(
-                    f"{line_no}:{column}: unknown character: {ch!r}"
+                    f"line {line_no}, column {column}: unknown character: {ch!r}"
                 )
 
             tokens.append(Token(TokenType.NEWLINE, "\\n", line_no, n + 1))

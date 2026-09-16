@@ -81,29 +81,27 @@ class Variable:
 
 
 class Interpreter:
-    """
+        """
     Resiris PC-side interpreter prototype.
 
-    Jelenleg:
-    - v / c declarations
-      - int / float / string / bool
-      - UnknownObject
-      - =, +=, -=, *=, /=
-      - +, -, *, /, %
-      - ==, !=, >, <, >=, <=
-    - variable names
-    - literals
+    Currently executes:
+      - v / c declarations
+        - int / float / string / bool
+        - UnknownObject
+        - =, +=, -=, *=, /=
+        - +, -, *, /, %
+        - ==, !=, >, <, >=, <=
+      - variable names
+      - literals
       - if / elif / else
       - fn
       - return
-    - function calls
-        - str()
+      - function calls
         - type()
-      - print_cmd()
-
-    Does NOT execute yet:
-      - mat
-      - await
+        - str()
+        - print_cmd()
+      - include / module calls
+      - PROCESS / FPS frames
 
     Scope:
     - function parameters and v variables created inside functions are local

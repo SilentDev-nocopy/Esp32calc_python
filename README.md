@@ -44,7 +44,13 @@ This installer:
 - creates a `resiris` symlink in `~/.local/bin`
 - installs the `.resy` Linux file-manager integration
 
-If a VS Code-compatible CLI is available, the installer will also ask whether to install the **Resiris Language Support** extension. This extension is **not** installed automatically — you can decline it during setup, or install it separately later directly from VS Code.
+If a VS Code-compatible CLI is available, the installer will also ask whether to install the **Resiris Language Support** extension. Pass `--yes` to skip the prompt and install it in one step:
+
+```bash
+bash ./install_resiris.sh --yes
+```
+
+The extension is **not** installed automatically otherwise — you can decline it during setup, or install it separately later directly from VS Code.
 
 The VS Code extension adds:
 
