@@ -50,6 +50,11 @@ class ReturnStmt:
 
 
 @dataclass
+class PassStmt:
+    pass
+
+
+@dataclass
 class PrintCmdStmt:
     expression: object
 

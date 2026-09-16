@@ -81,7 +81,7 @@ class Variable:
 
 
 class Interpreter:
-        """
+    """
     Resiris PC-side interpreter prototype.
 
     Currently executes:

@@ -5,11 +5,28 @@ from typing import Optional
 
 from .tokenizer import Token, TokenType, ResirisSyntaxError
 from .ast_nodes import (
-    Program, Include, Declaration, FunctionDef, IfStmt, ReturnStmt, PassStmt,
-    PassStmt, PrintCmdStmt, Assignment, ExpressionStmt, Literal,
-    Name, UnaryExpr, BinaryExpr, CallExpr, FunctionalObjectDef, TypeConversionExpr,
-    MatStmt, MatCase, ModuleAccessExpr, ModuleConstantAccessExpr,
-    ModuleConstantAccessExpr, LifecycleDef,
+    Program,
+    Include,
+    Declaration,
+    FunctionDef,
+    IfStmt,
+    ReturnStmt,
+    PassStmt,
+    PrintCmdStmt,
+    Assignment,
+    ExpressionStmt,
+    Literal,
+    Name,
+    UnaryExpr,
+    BinaryExpr,
+    CallExpr,
+    FunctionalObjectDef,
+    TypeConversionExpr,
+    MatStmt,
+    MatCase,
+    ModuleAccessExpr,
+    ModuleConstantAccessExpr,
+    LifecycleDef,
 )
 
 
@@ -130,11 +147,6 @@ class Parser:
                 self.advance()
             self.match(TokenType.NEWLINE)
             return PassStmt()
-        if token.type is TokenType.AWAIT:
-            self.advance()
-            expression = self.parse_expression()
-            self.expect(TokenType.NEWLINE, "a line ending is required after `await`")
-            return AwaitStmt(expression)
 
         if token.type is TokenType.PRINT_CMD:
             return self.parse_print_cmd()

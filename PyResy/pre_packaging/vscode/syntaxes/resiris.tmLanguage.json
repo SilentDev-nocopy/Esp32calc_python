@@ -69,7 +69,7 @@
       "patterns": [
         {
           "name": "keyword.control.resiris",
-          "match": "\\b(?:v|c|fn|await|if|elif|else|mat|return|pass)\\b"
+          "match": "\\b(?:v|c|fn|if|elif|else|mat|return|pass)\\b"
         },
         {
           "name": "constant.language.boolean.resiris",
